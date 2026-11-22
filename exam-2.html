@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Differential — Oral &amp; Maxillofacial Infectious Disease Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5EEF0;
+  --panel:#FFFFFF;
+  --panel-soft:#FBF6F7;
+  --ink:#241B2C;
+  --ink-soft:#5B5064;
+  --line:#E4D7DC;
+  --line-soft:#EEE3E7;
+
+  --ink-violet:#4A3B6B;
+  --ink-violet-soft:#EEE9F5;
+  --rose:#AE4568;
+  --rose-soft:#F7E7ED;
+  --amber:#B07C22;
+  --amber-soft:#F6EBD6;
+  --sage:#527056;
+  --sage-soft:#E7EFE6;
+  --teal:#33607D;
+  --teal-soft:#E2EEF2;
+  --slate:#4E5A66;
+  --slate-soft:#E7EBEE;
+  --indigo:#443A72;
+  --indigo-soft:#E9E6F4;
+
+  --good:#3E7A4D;
+  --bad:#AA3B3B;
+
+  --radius-s:6px;
+  --radius-m:10px;
+  --radius-l:16px;
+  --shadow-card: 0 1px 2px rgba(36,27,44,0.06), 0 6px 20px rgba(36,27,44,0.05);
+  --serif: 'Lora', Georgia, 'Times New Roman', serif;
+  --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(74,59,107,0.05) 1px, transparent 0);
+  background-size:22px 22px;
+  z-index:0;
+}
+button{font-family:inherit;}
+a{color:inherit;}
+
+/* ---------- layout shell ---------- */
+#app{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 20px 64px;}
+
+header.top{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  padding:34px 0 18px;
+  border-bottom:2px solid var(--ink);
+  flex-wrap:wrap;
+}
+.brand{display:flex;flex-direction:column;gap:2px;}
+.brand .mark{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:0.14em;
+  color:var(--rose);
+  text-transform:uppercase;
+}
+.brand h1{
+  font-family:var(--serif);
+  font-weight:700;
+  font-size:clamp(28px,4vw,40px);
+  margin:2px 0 4px;
+  letter-spacing:-0.01em;
+}
+.brand p.tag{
+  margin:0;
+  color:var(--ink-soft);
+  font-size:14.5px;
+  max-width:46ch;
+}
+.source-note{
+  font-size:12.5px;
+  color:var(--ink-soft);
+  text-align:right;
+  max-width:220px;
+  line-height:1.45;
+}
+
+nav.tabs{
+  display:flex;
+  gap:6px;
+  margin:22px 0 0;
+  padding:5px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:999px;
+  width:fit-content;
+  box-shadow:var(--shadow-card);
+}
+nav.tabs button{
+  border:none;
+  background:transparent;
+  padding:9px 18px;
+  border-radius:999px;
+  font-size:14.5px;
+  font-weight:600;
+  color:var(--ink-soft);
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+  white-space:nowrap;
+}
+nav.tabs button:hover{color:var(--ink);}
+nav.tabs button.active{
+  background:var(--ink);
+  color:var(--paper);
+}
+
+main{padding-top:28px;}
+.view{display:none;}
+.view.active{display:block;animation:fadeIn .22s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+/* ---------- ASK view ---------- */
+.ask-box{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius-l);
+  box-shadow:var(--shadow-card);
+  padding:22px;
+}
+.ask-box form{display:flex;gap:10px;}
+.ask-box input[type=text]{
+  flex:1;
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:19px;
+  border:none;
+  border-bottom:2px solid var(--line);
+  padding:8px 2px 10px;
+  background:transparent;
+  color:var(--ink);
+  outline:none;
+  transition:border-color .15s ease;
+}
+.ask-box input[type=text]:focus{border-color:var(--ink-violet);}
+.ask-box input[type=text]::placeholder{color:#B7ACC0;opacity:1;}
+.ask-box button.go{
+  border:none;
+  background:var(--ink);
+  color:var(--paper);
+  font-weight:600;
+  font-size:14.5px;
+  padding:0 22px;
+  border-radius:999px;
+  cursor:pointer;
+  transition:background .15s ease;
+}
+.ask-box button.go:hover{background:var(--ink-violet);}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.chips .chip{
+  border:1px solid var(--line);
+  background:var(--panel-soft);
+  color:var(--ink-soft);
+  font-size:13px;
+  padding:7px 13px;
+  border-radius:999px;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.chips .chip:hover{border-color:var(--ink-violet);color:var(--ink-violet);background:var(--ink-violet-soft);}
+
+.results{margin-top:26px;display:flex;flex-direction:column;gap:18px;}
+.hint-empty{
+  margin-top:26px;
+  padding:26px;
+  border:1px dashed var(--line);
+  border-radius:var(--radius-l);
+  color:var(--ink-soft);
+  font-size:14.5px;
+  text-align:center;
+}
+
+/* topic card */
+.topic-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-left:5px solid var(--cat-color, var(--ink-violet));
+  border-radius:var(--radius-m);
+  box-shadow:var(--shadow-card);
+  padding:22px 24px;
+}
+.topic-card .eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--cat-color, var(--ink-violet));
+  margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;
+}
+.topic-card h2{
+  font-family:var(--serif);
+  font-size:24px;
+  margin:0 0 14px;
+  line-height:1.25;
+}
+.topic-card .section{margin-top:16px;}
+.topic-card .section h3{
+  font-size:13.5px;
+  font-weight:700;
+  margin:0 0 8px;
+  color:var(--ink);
+}
+.topic-card .section ul{margin:0;padding-left:20px;}
+.topic-card .section li{margin-bottom:7px;font-size:15px;color:var(--ink);}
+.topic-card .section li::marker{color:var(--cat-color,var(--ink-violet));}
+
+.related-row{margin-top:6px;}
+.related-row .label{font-size:12px;color:var(--ink-soft);margin-bottom:8px;}
+.related-list{display:flex;flex-wrap:wrap;gap:8px;}
+.related-list button{
+  border:1px solid var(--line);
+  background:var(--panel);
+  padding:8px 14px;
+  border-radius:var(--radius-s);
+  font-size:13.5px;
+  cursor:pointer;
+  color:var(--ink);
+  text-align:left;
+}
+.related-list button:hover{border-color:var(--cat-color,var(--ink-violet));}
+.related-list button .rc{display:block;font-size:10.5px;color:var(--ink-soft);margin-bottom:2px;}
+
+/* ---------- BROWSE view ---------- */
+.browse-grid{display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start;}
+@media (max-width:820px){.browse-grid{grid-template-columns:1fr;}}
+.cat-list{display:flex;flex-direction:column;gap:8px;position:sticky;top:16px;}
+.cat-group{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius-m);
+  overflow:hidden;
+}
+.cat-group > .cat-head{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:14px;
+  border-left:5px solid var(--cat-color,var(--ink-violet));
+}
+.cat-group .swatch{width:9px;height:9px;border-radius:50%;background:var(--cat-color,var(--ink-violet));flex:none;}
+.cat-group .count{margin-left:auto;color:var(--ink-soft);font-size:12px;font-family:var(--mono);}
+.cat-group .topic-list{display:none;flex-direction:column;border-top:1px solid var(--line-soft);}
+.cat-group.open .topic-list{display:flex;}
+.cat-group .topic-list button{
+  text-align:left;border:none;background:transparent;
+  padding:9px 16px 9px 26px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;
+  border-bottom:1px solid var(--line-soft);
+}
+.cat-group .topic-list button:last-child{border-bottom:none;}
+.cat-group .topic-list button:hover{background:var(--panel-soft);color:var(--ink);}
+.cat-group .topic-list button.sel{color:var(--cat-color,var(--ink-violet));font-weight:600;}
+.browse-detail{min-height:200px;}
+.browse-placeholder{
+  padding:48px 24px;text-align:center;color:var(--ink-soft);
+  border:1px dashed var(--line);border-radius:var(--radius-l);font-size:14.5px;
+}
+
+/* ---------- FLASHCARDS view ---------- */
+.fc-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px;}
+select{
+  font-family:inherit;font-size:14px;padding:9px 12px;border-radius:var(--radius-s);
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+}
+.fc-progress{font-family:var(--mono);font-size:13px;color:var(--ink-soft);margin-left:auto;}
+.fc-stage{display:flex;flex-direction:column;align-items:center;gap:20px;}
+.fc-card{
+  width:100%;max-width:560px;min-height:230px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius-l);
+  box-shadow:var(--shadow-card);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:36px 30px;cursor:pointer;position:relative;
+  border-top:5px solid var(--cat-color,var(--ink-violet));
+}
+.fc-card .fc-cat{
+  position:absolute;top:14px;left:20px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--cat-color,var(--ink-violet));
+}
+.fc-card .fc-flip-note{
+  position:absolute;bottom:14px;right:18px;font-size:11.5px;color:var(--ink-soft);
+}
+.fc-term{font-family:var(--serif);font-size:26px;font-weight:600;}
+.fc-def{font-size:17px;line-height:1.55;}
+.fc-buttons{display:flex;gap:10px;}
+.fc-buttons button{
+  border:1px solid var(--line);background:var(--panel);padding:10px 20px;
+  border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink);
+}
+.fc-buttons button:hover{border-color:var(--ink-violet);color:var(--ink-violet);}
+.fc-buttons button.primary{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.fc-buttons button.primary:hover{background:var(--ink-violet);border-color:var(--ink-violet);color:#fff;}
+.fc-buttons button.know{border-color:var(--good);color:var(--good);}
+.fc-buttons button.dontknow{border-color:var(--bad);color:var(--bad);}
+
+/* ---------- QUIZ view ---------- */
+.quiz-setup{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-l);
+  padding:26px;box-shadow:var(--shadow-card);max-width:560px;
+}
+.quiz-setup h2{font-family:var(--serif);margin-top:0;}
+.quiz-setup .field{margin-bottom:16px;}
+.quiz-setup label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink-soft);}
+.quiz-q{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-l);
+  padding:26px;box-shadow:var(--shadow-card);max-width:640px;
+}
+.quiz-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-bottom:14px;}
+.quiz-q h2{font-family:var(--serif);font-size:21px;margin:0 0 20px;line-height:1.4;}
+.quiz-options{display:flex;flex-direction:column;gap:10px;}
+.quiz-options button{
+  text-align:left;padding:13px 16px;border-radius:var(--radius-m);
+  border:1px solid var(--line);background:var(--panel-soft);cursor:pointer;font-size:15px;color:var(--ink);
+  transition:all .12s ease;
+}
+.quiz-options button:hover:not(:disabled){border-color:var(--ink-violet);}
+.quiz-options button.correct{border-color:var(--good);background:var(--sage-soft);color:var(--good);font-weight:600;}
+.quiz-options button.incorrect{border-color:var(--bad);background:#FBEAEA;color:var(--bad);font-weight:600;}
+.quiz-options button:disabled{cursor:default;}
+.quiz-explain{
+  margin-top:18px;padding:14px 16px;background:var(--panel-soft);border-radius:var(--radius-m);
+  font-size:14px;color:var(--ink-soft);display:none;
+}
+.quiz-explain.show{display:block;}
+.quiz-nextbar{margin-top:18px;display:flex;justify-content:flex-end;}
+.quiz-nextbar button{
+  border:none;background:var(--ink);color:var(--paper);padding:10px 22px;border-radius:999px;
+  font-weight:600;cursor:pointer;font-size:14px;
+}
+.quiz-nextbar button:hover{background:var(--ink-violet);}
+.quiz-result{text-align:center;padding:12px;}
+.quiz-result .score{font-family:var(--serif);font-size:52px;font-weight:700;margin:14px 0;}
+.quiz-result p{color:var(--ink-soft);}
+
+footer.credit{
+  margin-top:56px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-soft);text-align:center;
+}
+
+@media (max-width:600px){
+  header.top{padding-top:22px;}
+  .source-note{display:none;}
+  .ask-box{padding:16px;}
+  .ask-box input[type=text]{font-size:17px;}
+  .topic-card{padding:18px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<header class="top">
+  <div class="brand">
+    <span class="mark">DSOM 5301 &middot; Study Companion</span>
+    <h1>The Differential</h1>
+    <p class="tag">Ask a question, browse by topic, or drill yourself with flashcards and a quiz — built from your infectious disease, immunology, and oral microbiology course material.</p>
+  </div>
+  <div class="source-note">Covers: bacterial, fungal &amp; viral infections of the oral/maxillofacial region, oral microbial flora, oral immunology, and lymphoid organ microanatomy.</div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button data-view="ask" class="active">Ask</button>
+  <button data-view="browse">Browse</button>
+  <button data-view="flashcards">Flashcards</button>
+  <button data-view="quiz">Quiz</button>
+</nav>
+
+<main>
+  <section class="view active" id="view-ask">
+    <div class="ask-box">
+      <form id="ask-form" autocomplete="off">
+        <input type="text" id="ask-input" placeholder="e.g. what causes ANUG, or why does IgA get into saliva?" />
+        <button type="submit" class="go">Ask</button>
+      </form>
+      <div class="chips" id="ask-chips"></div>
+    </div>
+    <div class="results" id="ask-results"></div>
+  </section>
+
+  <section class="view" id="view-browse">
+    <div class="browse-grid">
+      <div class="cat-list" id="cat-list"></div>
+      <div class="browse-detail" id="browse-detail">
+        <div class="browse-placeholder">Pick a topic on the left to read the full notes.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-flashcards">
+    <div class="fc-controls">
+      <select id="fc-category"></select>
+      <select id="fc-order">
+        <option value="inorder">In order</option>
+        <option value="shuffle">Shuffled</option>
+      </select>
+      <span class="fc-progress" id="fc-progress"></span>
+    </div>
+    <div class="fc-stage" id="fc-stage"></div>
+  </section>
+
+  <section class="view" id="view-quiz">
+    <div id="quiz-area"></div>
+  </section>
+</main>
+
+<footer class="credit">Built for personal study from your uploaded course slides. Runs entirely in this file — no internet connection or account needed.</footer>
+
+</div>
+<script>
+const TOPICS = [{"id": "micro-terms", "category": "Overview & General Concepts", "title": "Basic Terminology: Commensal, Pathogen, Opportunist", "aliases": ["commensal", "pathogen", "opportunistic infection", "obligate", "facultative", "intracellular pathogen", "extracellular pathogen"], "sections": [{"h": "Core definitions", "items": ["Commensal: a microorganism that benefits from living on/in the host while the host is neither helped nor harmed.", "Pathogen: any microorganism capable of causing disease.", "Opportunistic infection: caused by an organism that doesn't normally cause disease and may live as a commensal, but causes infection when host defenses are weakened.", "Intracellular pathogen: invades and lives inside host cells.", "Extracellular pathogen: infects tissues/organs without needing to live inside cells.", "Obligate: restricted to one particular mode of life (e.g., an obligate intracellular parasite can only replicate inside a host cell).", "Facultative: capable of a mode of life but not restricted to it (e.g., facultative anaerobes can live with or without oxygen)."]}, {"h": "Local, regional, systemic infection", "items": ["Local infection: limited to one site or tissue.", "Regional infection: involves multiple tissues within one region/organ.", "Systemic infection: spreads through the bloodstream to multiple tissues/organs."]}]}, {"id": "infectious-agent-classes", "category": "Overview & General Concepts", "title": "Classes of Infectious Agents (Prions to Helminths)", "aliases": ["taxonomic categories of microorganisms", "prions", "protozoa", "helminths", "size of pathogens"], "sections": [{"h": "Six categories (size, propagation site, classic example)", "items": ["Prions (<20 nm): abnormal proteins that template misfolding of normal prion protein (PrP); intracellular. Example: Creutzfeldt-Jakob disease.", "Viruses (20–400 nm): obligate intracellular parasites. Example: Poliovirus → poliomyelitis.", "Bacteria (0.2–15 µm): can be obligate intracellular (Chlamydia trachomatis), extracellular (Streptococcus pneumoniae), or facultative intracellular (Mycobacterium tuberculosis).", "Fungi (2–200 µm): extracellular (Candida albicans → candidiasis) or facultative intracellular (Histoplasma capsulatum → histoplasmosis).", "Protozoa (1–50 µm): single-celled eukaryotes; can be extracellular (Trypanosoma brucei), facultative intracellular (T. cruzi), or obligate intracellular (Leishmania donovani).", "Helminths (3 mm–10 m): parasitic worms; extracellular (Wuchereria bancrofti → filariasis) or intracellular (Trichinella spiralis → trichinosis)."]}, {"h": "Normal microbiome", "items": ["Made up of viruses, bacteria, fungi and other organisms; composition differs by body site.", "The oral cavity and lower intestine are the most microbially diverse sites.", "Most residents are commensals, but pathogens and opportunists are also present.", "Dysbiosis = an alteration of the microbiome that is associated with disease."]}]}, {"id": "routes-of-entry", "category": "Overview & General Concepts", "title": "Routes of Entry, Local Barriers, and Transmission", "aliases": ["how infections enter the body", "local barriers", "transmission modes", "routes of transmission"], "sections": [{"h": "Local barriers by site", "items": ["Skin: low pH, fatty acids, commensal flora, tight squamous epithelium that sloughs off.", "Oral cavity: saliva (IgA, antimicrobial peptides, enzymes), crevicular fluid neutrophils, resident microbiome, sloughing squamous epithelium.", "GI tract: stomach acid (pH 1.5–3.5), viscous mucus, pancreatic enzymes, antimicrobial peptides, secretory IgA — though M cells of gut MALT can be a point of entry for some pathogens.", "Respiratory tract: mucus with IgA and enzymes, ciliated epithelium, alveolar macrophages.", "Urinary tract: regular flushing by urine flow; the urethra (especially in women) is the most vulnerable site.", "Genital tract: low vaginal pH is protective between puberty and menopause."]}, {"h": "Major routes of entry", "items": ["Breaches in skin or mucosa — the deeper the breach and the more virulent the organism, the more damage results.", "Direct entry into the bloodstream.", "Inhalation/ingestion — large particles trapped in mucus are swallowed or coughed out; particles under 5 µm reach the lung directly and are phagocytosed by macrophages/neutrophils.", "Sexual transmission.", "Manifestations of infection can occur far from the actual site of entry."]}, {"h": "Transmission modes with examples", "items": ["Contact: shed infected keratinocytes (HPV, HSV); saliva (CMV, mumps, rabies).", "Respiratory droplets/aerosols/dust: coronavirus, influenza, varicella, M. tuberculosis.", "Blood: bloodborne pathogens such as hepatitis B, hepatitis C, HIV.", "Fecal–oral: rotavirus, hepatitis A, cholera.", "Sexual: STIs, HIV, HPV, HBV.", "Vertical (mother→fetus/baby): rubella, Zika, Treponema pallidum (syphilis).", "Milk: CMV, HIV, hepatitis B.", "Insect/arthropod vectors: Plasmodium (malaria)."]}]}, {"id": "tropism-evasion", "category": "Overview & General Concepts", "title": "Tropism and Microbial Evasion of the Immune System", "aliases": ["tropism", "immune evasion", "virulence factors general"], "sections": [{"h": "Tropism — why organisms prefer certain cells/tissues", "items": ["Surface receptors: e.g., HIV's glycoprotein gp120 binds CD4 and the chemokine receptors CXCR4/CCR5 on T cells.", "Intracellular factors: some transcription factors needed for replication are unique to certain cell types.", "pH: enteroviruses are built to resist stomach acid, bile, and digestive enzymes.", "Temperature: rhinoviruses prefer the cooler upper respiratory tract.", "Tropism shapes transmission mode, clinical presentation, and the immune response generated."]}, {"h": "What determines whether infection proceeds", "items": ["Either the pathogen has strong virulence factors, or the host's defenses are compromised (true opportunists need the latter).", "Dose matters — a single organism usually isn't enough; the number needed depends on the microbe and the host/site.", "Success requires both breaching host barriers and evading immune responses — the 'right place and time.'"]}, {"h": "Ways microbes evade immune responses", "items": ["Altering antigen configuration (many viruses; classic 'antigenic drift/shift' idea).", "Subverting host defenses — e.g., M. tuberculosis survives inside macrophages.", "Establishing a hideout inside host cells and going latent — e.g., HSV in sensory ganglia.", "Resisting phagocytosis; escaping the inflammasome.", "Interfering with adaptive immunity, interferon signaling, or antigen presentation.", "Directly infecting immune cells such as T cells or dendritic cells."]}]}, {"id": "infection-types-spread", "category": "Overview & General Concepts", "title": "Types of Infection and How They Spread in the Body", "aliases": ["localized vs systemic", "acute vs chronic vs latent infection", "dissemination", "lysis and invasion"], "sections": [{"h": "Types of infection (by course/duration)", "items": ["Localized vs. systemic.", "Acute/transient — e.g., the common cold, influenza.", "Chronic/persistent (actively replicating) — includes oncogenic viruses and hepatitis B.", "Latent (viral) — not replicating for a period, often after an acute infection (classic example: herpes simplex)."]}, {"h": "How infection spreads through the body", "items": ["Lysis and invasion: pathogens release enzymes that destroy tissue to facilitate spread.", "Via blood and lymph: pyogenic (pus-forming) bacteria spread through vasculature, sometimes carried inside cells; abscess-forming bacteria can spread along fascial planes.", "Cell-to-cell transmission: viruses passed to neighboring cells, sometimes via cell fusion (syncytia) or along nerves.", "Manifestations of infection may be distant from the original site of entry."]}, {"h": "Viral cytopathic clues seen on histology (FYI)", "items": ["CMV: distinct nuclear and ill-defined cytoplasmic inclusions in infected cells.", "HSV and VZV: fusion of epithelial cells producing multinucleated cells with molded nuclei and nuclear inclusions.", "Hepatitis B (chronic): 'ground-glass' hepatocyte cytoplasm from accumulated HBsAg."]}]}, {"id": "virulence-injury", "category": "Overview & General Concepts", "title": "Bacterial Virulence Factors and Tissue Injury from Infection", "aliases": ["bacterial virulence", "quorum sensing", "biofilm resistance general", "host response damage"], "sections": [{"h": "What determines bacterial virulence", "items": ["Adherence to host cells, invasion of tissues/cells, toxin production, and evasion of host defenses.", "Plasmids and bacteriophages move virulence and antibiotic-resistance genes between bacteria.", "Biofilms interfere with antimicrobials and block immune system access.", "Quorum sensing: bacteria increase production of virulence factors once their local population density is high enough."]}, {"h": "How infections injure tissue", "items": ["Direct damage to cells/tissue by the pathogen itself (necrosis, apoptosis).", "Inflammation — acute, chronic, or chronic granulomatous — is often the main driver of damage, not the organism directly.", "Immune complex deposition can damage kidneys and blood vessels (covered under immunopathology).", "Persistent inflammation damages barriers over time and can contribute to neoplastic (cancerous) change."]}, {"h": "Take-home summary", "items": ["Clinical/pathologic presentation of an infection depends on: the type of pathogen and its tropism, the route of entry, and the status of host defenses."]}]}, {"id": "id-testing-methods", "category": "Overview & General Concepts", "title": "How Infections Are Diagnosed in the Lab", "aliases": ["culture", "serology", "molecular diagnostics", "PCR", "histology diagnosis", "identification methods"], "sections": [{"h": "Five main identification methods", "items": ["Culture: grows the organism and tests its sensitivity to treatments.", "Histology: identifies organisms by morphology (of the microbe and/or the tissue reaction), sometimes aided by immunohistochemistry.", "Serology: detects antibodies against a specific organism in the blood.", "Molecular diagnostics: highly sensitive detection of specific nucleic acid sequences (PCR, next-gen sequencing).", "Proteomics: mass spectrometry-based identification."]}]}, {"id": "bacteria-fungi-examples-table", "category": "Overview & General Concepts", "title": "Quick-Reference: Bacterial, Fungal, and Viral Disease Examples", "aliases": ["examples table bacteria fungi virus", "organ system pathogen disease table"], "sections": [{"h": "Bacterial examples by group", "items": ["Pyogenic cocci — S. aureus, S. pyogenes, S. pneumoniae, N. gonorrhoeae → abscess, pneumonia, sepsis, pharyngitis/scarlet fever, meningitis, gonorrhea.", "Gram-negative rods — E. coli, Pseudomonas aeruginosa → UTI, abscess, pneumonia, sepsis, endocarditis.", "Mycobacteria — M. tuberculosis → tuberculosis.", "Actinomyces — A. israelii → abscess, osteomyelitis.", "Enteric bacteria — E. coli, V. cholerae, Salmonella, Campylobacter → gastroenterocolitis.", "Treponema — T. pallidum → syphilis."]}, {"h": "Fungal examples", "items": ["Superficial — dermatophytes, Candida → tinea pedis/capitis, mycetomas, candidiasis.", "Deep — Mucor, Cryptococcus, Histoplasma, Aspergillus, Pneumocystis → systemic infections."]}, {"h": "Selected viral examples by organ system", "items": ["Digestive: mumps virus (mumps, pancreatitis, orchitis); hepatitis A (acute hepatitis); hepatitis B/C (acute or chronic hepatitis).", "Skin/mucosa: papillomavirus (warts, squamous cell carcinoma).", "Systemic with skin/mucosal eruption: measles virus (rubeola); rubella virus (German measles); VZV (chickenpox, shingles on reactivation); HSV (primary/recurrent lesions).", "Systemic with hematopoietic effects: CMV (gastroenteritis in adults/transplant patients); EBV (mononucleosis, lymphoma, epithelial lesions); HIV (AIDS)."]}]}, {"id": "bacteria-basics", "category": "Bacterial Infections", "title": "What Are Bacteria? Classification Basics", "aliases": ["gram positive gram negative", "cocci bacilli", "aerobic anaerobic bacteria"], "sections": [{"h": "Key classification axes", "items": ["Bacteria are prokaryotes — cells without membrane-bound organelles such as a nucleus.", "Gram stain: Gram-positive have a thick cell wall (retain crystal violet); Gram-negative have a thin cell wall.", "Shape: cocci (spherical) vs. bacilli (rod-shaped).", "Oxygen requirement: aerobic (need O2), anaerobic (cannot tolerate O2), facultative anaerobic (can do either)."]}]}, {"id": "impetigo", "category": "Bacterial Infections", "title": "Impetigo", "aliases": ["staph impetigo", "strep impetigo", "bullous impetigo"], "sections": [{"h": "Overview", "items": ["Acute bacterial skin infection with a pustular eruption, yellowish crusts, and bullae, mainly around the mouth, nostrils, arms, and legs.", "Caused by a mix of Staph aureus and Strep pyogenes (Group A, β-hemolytic) — both Gram-positive facultative anaerobes.", "Clinical variants: non-bullous/'scabby' (70% of cases) and bullous/blistering (30%)."]}, {"h": "Risk factors & treatment", "items": ["Risk factors: poor hygiene (daycare settings), poor nutrition, contact sports, diabetes, HIV/AIDS.", "Treatment: topical or systemic penicillin, or a broader-spectrum agent like cephalexin for diffuse disease.", "Usually resolves without complication."]}]}, {"id": "cat-scratch-disease", "category": "Bacterial Infections", "title": "Cat Scratch Disease", "aliases": ["bartonella henselae", "cat scratch fever"], "sections": [{"h": "Overview", "items": ["Self-limited infectious disease that begins at a skin scratch site and spreads to regional lymph nodes.", "The most common cause of regional lymphadenopathy in children (>22,000 U.S. cases/year).", "Caused by Bartonella henselae, an intracellular, Gram-negative bacterium; cats are the natural reservoir. Spread by cat scratch/bite — not person-to-person.", "80% of cases occur in the 1st–2nd decade of life."]}, {"h": "Clinical course, diagnosis, treatment", "items": ["A papule develops at the scratch site, then progresses to erythematous, vesicular, crusted lesions; 1–3 weeks later regional lymphadenopathy, fever, and malaise appear. The initial scratch site may have already healed by then.", "Diagnosis is mainly clinical; biopsy in some cases shows stellate (geographic) necrosis with suppuration; the organism can be shown with a Warthin-Starry stain.", "Treatment: 5-day course of azithromycin; disseminated disease uses azithromycin or doxycycline plus rifampin."]}]}, {"id": "actinomycosis", "category": "Bacterial Infections", "title": "Actinomycosis", "aliases": ["lumpy jaw", "actinomyces israelii", "sulfur granules", "cervicofacial actinomycosis"], "sections": [{"h": "Overview & pathogenesis", "items": ["A subacute-to-chronic bacterial infection where suppuration is the key feature.", "Caused by Actinomyces species — filamentous, Gram-positive, anaerobic bacteria that are normal flora of the mouth, colon, bronchi, and vagina (nearly 100% of people are colonized orally by age 2).", "Disease requires a break in the mucosal barrier: a grossly carious tooth, extraction, after root canal treatment, soft tissue injury, or jaw osteomyelitis/fracture.", "Distribution of disease: cervicofacial (55%, often endodontic/osteomyelitis-related — the classic 'lumpy jaw'), abdominal (20%), thoracic (15%), plus pelvic (associated with IUDs), mediastinal, CNS, musculoskeletal, and disseminated forms."]}, {"h": "Cervicofacial ('lumpy jaw') clinical picture", "items": ["Three characteristic features: (1) chronicity with mass-like swelling, (2) sinus tract formation draining pus, (3) disease that relapses after a short course of antibiotics.", "Classic presentation: a painless, firm ('wooden'), slowly spreading mass at the angle of the jaw, with sinus tract formation; lymphadenopathy is uncommon.", "Imaging may show an ill-defined radiolucency that can mimic malignancy.", "Sulfur granules (bacterial colonies, not actually sulfur) are typically found in the sinus tract — histologically they show a 'sunburst/ray' pattern of filamentous organisms at the periphery; identified with Grocott or PAS stain."]}, {"h": "Treatment", "items": ["Early cervicofacial disease: 2–6 weeks of penicillin.", "Deep-seated/chronic fibrosing disease: high-dose antibiotics for up to 12 months, plus abscess drainage and excision of sinus tracts.", "Penicillin allergy/resistance: doxycycline or tetracycline.", "Actinomycotic osteomyelitis: debridement (the cornerstone) plus a 3-month course of penicillin. Be careful not to mistake simple colonization of a bony sequestrum for true invasive osteomyelitis.", "Hyperbaric oxygen can be a helpful adjunct in refractory cases.", "Localized acute disease (periapical/pericoronal/soft tissue) can be managed more conservatively with surgical debridement plus a short antibiotic course."]}]}, {"id": "syphilis", "category": "Bacterial Infections", "title": "Syphilis (Primary, Secondary, Tertiary, Congenital)", "aliases": ["treponema pallidum", "chancre", "condyloma latum", "gumma", "hutchinson triad", "congenital syphilis"], "sections": [{"h": "The organism & transmission", "items": ["Caused by Treponema pallidum, a Gram-negative, helical (coiled) spirochete.", "Treated with penicillin at any stage.", "Modes of transmission: sexual contact, blood transfusion, and transplacental (mother to fetus → congenital syphilis).", "Diagnosis relies on sexual history, clinical exam, and serologic/histopathologic testing."]}, {"h": "Primary syphilis", "items": ["A chancre appears 3–10 weeks after exposure at the contact site — most often genital, but can be anal or oral.", "Highly contagious (loaded with treponemes); best diagnosed by dark-field microscopy or Warthin-Starry stain.", "Blood tests are positive in only ~30% at 1 week but ~90% by >3 weeks.", "Oral primary chancres: painless, single ulcers with indurated borders on lips, tongue, or palate; associated lymphadenopathy in ~80% of cases.", "The chancre heals in 3–6 weeks even without treatment — but the organism has already spread systemically by then."]}, {"h": "Secondary syphilis", "items": ["Occurs weeks to months after an untreated primary chancre heals; highly contagious.", "Classic finding: maculopapular rash, notably on palms and soles, plus constitutional symptoms and lymphadenopathy.", "Oral manifestations: flat mucous patches/ulcerations anywhere in the mouth, split papules at the corners of the mouth, and condyloma latum (typically on the tongue). Mucous patches are teeming with spirochetes and highly contagious on direct contact.", "Usually self-resolving even without treatment (then may progress to latency/tertiary disease)."]}, {"h": "Tertiary syphilis", "items": ["Develops in 25–40% of untreated patients, typically after a latent period of 1–30 years.", "Forms: cardiovascular syphilis (aortitis, dissecting aneurysm), neurosyphilis (blindness, deafness, memory loss, locomotor ataxia), and gummatous syphilis (destructive granulomatous 'gumma' lesions, e.g. of the palate) — gummas are not contagious."]}, {"h": "Congenital syphilis", "items": ["Transplacental transmission; highest risk when the mother has untreated primary/secondary disease. 40% of affected pregnancies end in spontaneous abortion.", "Findings: orofacial clefts, 8th cranial nerve palsy, saddle nose, frontal/parietal bossing, saber shins, rhagades (perioral fissuring/scarring), and dental defects (Hutchinson's incisors, mulberry molars).", "Hutchinson's Triad: Hutchinson's teeth + interstitial keratitis + 8th cranial nerve (sensorineural hearing) deficit."]}, {"h": "Diagnosis & treatment summary", "items": ["Non-treponemal tests (RPR, VDRL) detect biomarkers of cellular damage; treponemal tests (FTA-ABS, MHA-TP) detect antibodies against T. pallidum directly. Sensitivities vary by stage, so confirmatory testing is needed.", "Penicillin remains the treatment of choice at every stage."]}]}, {"id": "tuberculosis", "category": "Bacterial Infections", "title": "Tuberculosis (Primary, Secondary, Miliary, Oral TB)", "aliases": ["mycobacterium tuberculosis", "gohn complex", "pott's disease", "miliary tb", "tb diagnosis", "ppd test"], "sections": [{"h": "The organism & epidemiology", "items": ["Caused by Mycobacterium tuberculosis, a Gram-positive (technically acid-fast) aerobic bacillus with a lipid-rich cell wall.", "Spread person-to-person via inhaled respiratory droplets; more common in malnourished and immunocompromised individuals (including HIV).", "Roughly 10 million people fall ill annually worldwide with ~1.2 million deaths.", "70% of exposed people clear the infection entirely (infection is common, disease is not); 30% develop primary TB — of those, 10% become symptomatic and 90% develop latent TB (encapsulated, asymptomatic, non-contagious, but reactivatable if immunity drops)."]}, {"h": "Clinical forms", "items": ["Primary TB: the Ghon complex = primary lung focus + involved lymph node (often asymptomatic); can progress to symptomatic TB disease (cough, hemoptysis, fever, night sweats, weight loss).", "Secondary (reactivation/post-primary) TB: cavitations in the upper lobes, interstitial fibrosis, pleural effusions, and hematogenous spread to organs beyond the lungs (liver, spine, head/neck, mouth, skin, lymph nodes).", "Disseminated (miliary) TB: tiny 'millet seed'-sized nodules scattered widely, favoring lungs, bone/joint (TB osteomyelitis), meninges, kidney, head and neck, skin.", "Pott's disease: vertebral TB causing pain, disc-space destruction, vertebral fusion, and — in advanced cases — kyphosis/scoliosis.", "Cutaneous TB can present as lupus vulgaris."]}, {"h": "Oral manifestations", "items": ["Usually a sign of secondary/disseminated disease, seeded via sputum or blood.", "Ulcers with irregular, undermined borders; nodular/papillary/ulcerative 'gingivitis-like' lesions; periapical granuloma; osteomyelitis of the jaws; sialadenitis; lymphadenitis (may show as calcified lymph nodes on panoramic film).", "Lesions on the tongue or gingiva can mimic cancer — biopsy of any non-healing oral lesion is essential."]}, {"h": "Diagnosis", "items": ["TB skin test (Mantoux/PPD): read 48–72 hours after intradermal injection. False positives can come from nontuberculous mycobacteria or prior BCG vaccination; false negatives from immunosuppression, very recent or very old infection, young age, or recent live-virus vaccination.", "IGRA blood test (e.g., QuantiFERON-TB Gold).", "Microbiology: acid-fast bacillus (Ziehl-Neelsen) stain and culture.", "Biopsy: necrotizing granuloma with caseous ('cheese-like') necrosis, Langhans giant cells containing acid-fast organisms."]}, {"h": "Treatment", "items": ["6-month multidrug regimen: rifampicin, isoniazid, pyrazinamide, ethambutol.", "Multi-drug-resistant strains are an increasing challenge."]}]}, {"id": "scrofula", "category": "Bacterial Infections", "title": "Scrofula (Cervical/Mycobacterial Lymphadenitis)", "aliases": ["mycobacterium bovis", "mycobacterium scrofulaceum", "cervical tuberculous lymphadenitis"], "sections": [{"h": "Overview", "items": ["Cervical tuberculosis, classically from drinking milk contaminated with Mycobacterium bovis, or infection with Mycobacterium scrofulaceum; rare where milk is pasteurized.", "Can also follow contact with an infected animal wound (e.g., during hunting), draining into lymph nodes.", "M. scrofulaceum is the most common cause of mycobacterial cervical lymphadenitis in children, and is sometimes grouped with M. avium and M. intracellulare (the 'MAIS group')."]}, {"h": "Clinical features & treatment", "items": ["Cervical lymphadenitis, often with secondary ulceration, fistula formation, and 'cold abscesses'; nodes may calcify.", "Typically unilateral cervical nodes without systemic illness, and does not respond to standard TB treatment.", "For childhood infection, surgical excision without chemotherapy is preferred (about 95% success rate). Antibiotic options include isoniazid, rifampin, and streptomycin."]}]}, {"id": "anug-noma", "category": "Bacterial Infections", "title": "ANUG (Trench Mouth) and Noma", "aliases": ["necrotizing ulcerative gingivitis", "trench mouth", "noma", "fusospirochetal infection", "necrotizing ulcerative periodontitis"], "sections": [{"h": "Acute Necrotizing Ulcerative Gingivitis (ANUG)", "items": ["A distinct gingivitis often tied to psychological stress, poor hygiene, and specific pathogens — historically called 'trench mouth' from its prevalence among WWI soldiers.", "Other predisposing states: immunosuppression (HIV/AIDS, mononucleosis).", "Caused by a fusospirochetal complex: Fusobacterium nucleatum (formerly Bacillus fusiformis), the spirochete Borrelia vincentii, plus Prevotella intermedia, Porphyromonas gingivalis, and Treponema species.", "Clinical features: inflamed, edematous, hemorrhagic, 'punched-out' and necrotic interdental papillae; fetid odor and pain. Certain medications causing agranulocytosis can predispose to aggressive gingivitis; the appearance can be confused with gonorrhea.", "Treatment: scaling/root planing and debridement (excellent response); metronidazole or penicillin if fever or lymphadenopathy is present. Underlying immune status should always be investigated.", "Progression: ANUG → necrotizing ulcerative periodontitis (loss of attachment) → necrotizing ulcerative mucositis/stomatitis (spreads to adjacent mucosa/soft tissue)."]}, {"h": "Noma (Cancrum Oris)", "items": ["A severe, disfiguring gangrene of the mouth/face that begins as ANUG and spreads rapidly through tissue, ignoring anatomic barriers (can invade muscle and bone).", "About 100,000–140,000 new cases per year, mostly in the first decade of life; incidence is now highest in sub-Saharan Africa (roughly 1–2 per 1000 children).", "Risk factors: malnutrition, poor sanitation, poor oral hygiene, poverty, proximity to other infectious disease.", "Polymicrobial, anaerobe-driven infection (Fusobacterium necrophorum is particularly important).", "Untreated fatality rate ~80%; drops to ~10% with treatment (penicillin/metronidazole/streptomycin, wound care, fluid/electrolyte/nutrition support, physiotherapy for trismus, and reconstructive surgery afterward).", "Noma is considered to have developed once the alveolar bone becomes exposed as the process spreads from the mucogingival fold to the lip/cheek and perforates it."]}]}, {"id": "fungi-basics", "category": "Fungal Infections", "title": "What Are Fungi? Superficial vs. Deep Infections", "aliases": ["dimorphism", "yeast vs hyphae", "superficial fungal infection", "deep fungal infection"], "sections": [{"h": "Basic biology", "items": ["Fungi are eukaryotic cells with membrane-bound organelles (including a nucleus), cell walls, and ergosterol-containing cell membranes.", "Can grow as rounded yeast cells or slender filamentous hyphae.", "Dimorphism: many pathogenic fungi grow as hyphae at room temperature but convert to yeast form at body temperature."]}, {"h": "Superficial vs. deep infection", "items": ["Superficial infections are limited to mucocutaneous surfaces, hair, and nails; treated with topical or systemic antifungals.", "Deep infections spread systemically, invade tissue, and can destroy vital organs; often opportunistic in immunodeficient patients; typically need IV/PO antifungals (amphotericin B, azoles)."]}, {"h": "Fungal infection risk in immunocompromised patients", "items": ["Invasive fungal infections are rising among patients with cancer (especially leukemia with stem cell transplant), solid organ transplant, HIV/AIDS, chemotherapy, and COVID-19.", "Pulmonary complications are the leading cause of morbidity/mortality in these patients.", "Relative frequencies: Aspergillosis is the most common of the invasive fungal infections in this group (incidence 1–9%, but mortality 55–92% after transplant); Histoplasmosis is common with HIV/AIDS and certain leukemias/lymphomas; Mucormycosis is rarer but often fatal, especially with uncontrolled diabetes or iron overload.", "Candidiasis is the most common surface opportunistic infection overall (oral mucosa, genitalia, skin); non-albicans species (C. tropicalis, C. parapsilosis, C. glabrata) are more often seen in immunocompromised patients."]}]}, {"id": "candidiasis", "category": "Fungal Infections", "title": "Candidiasis (Thrush and Other Oral Forms)", "aliases": ["thrush", "pseudomembranous candidiasis", "chronic hyperplastic candidiasis", "erythematous candidiasis", "denture stomatitis", "median rhomboid glossitis", "angular cheilitis", "perleche"], "sections": [{"h": "Overview", "items": ["The most common opportunistic oral infection, caused by Candida albicans, a normal commensal of skin, mouth, GI tract, and vagina that only causes disease given a predisposing factor.", "Usually localized to mucocutaneous surfaces: vulvovaginal area, oral cavity, diaper area, or (in immunocompromised patients) the esophagus.", "Rare presentations: chronic mucocutaneous candidiasis with endocrinopathy; invasive candidiasis (typically immunocompromised patients)."]}, {"h": "Predisposing factors", "items": ["Acidic saliva (diabetes, smoking, medications), xerostomia (dry mouth), oral prosthetics, heavy smoking.", "Medications: antibiotics, steroids, chemotherapy, inhalers.", "Radiation therapy; immunologic conditions (HIV/AIDS, congenital immunodeficiency, extremes of age); diabetes mellitus; pregnancy; endocrine disorders; cancer.", "Other oral lesions such as lichen planus, epithelial dysplasia, or warts can also predispose."]}, {"h": "Clinical forms — white lesions", "items": ["Pseudomembranous candidiasis ('thrush'): curdy white plaques/papules that wipe off to reveal an erythematous base; usually asymptomatic. Seen in infancy/old age, diabetes, corticosteroid/inhaler use, recent broad-spectrum antibiotics, and HIV/AIDS (especially if recurrent). Diagnosed visually; biopsy only if it fails to respond to therapy. PAS stain highlights the organism.", "Chronic hyperplastic candidiasis: the rarest presentation; a biopsy is usually needed since it can look just like leukoplakia (a precancerous lesion)."]}, {"h": "Clinical forms — red lesions", "items": ["Erythematous (atrophic) candidiasis: common (often coexists with thrush); patients may report burning or a sensation like the mouth was scalded. Can follow antibiotic use (kills off competing normal flora) or occur with dry mouth.", "Denture stomatitis: erythematous candidiasis under a denture; patients usually admit to wearing the denture continuously. Differential diagnosis includes denture pressure trauma, denture-base allergy, or inadequately cured acrylic.", "Median rhomboid glossitis: localized candidiasis in the midline dorsum of the tongue; occasionally 'kissing' lesions appear on the opposing palate.", "Angular cheilitis (perlèche): erythema, maceration, scaling, and fissuring at the corners of the mouth (usually bilateral), from excessive moisture secondarily infected with Candida (sometimes with Staph aureus too). Common in denture wearers with reduced vertical dimension, and in children who drool/thumb-suck. Should be distinguished from herpes labialis."]}, {"h": "Management", "items": ["Eliminate the predisposing factor when possible.", "Nystatin suspension (swish and spit) for 7–10 days.", "Clotrimazole troches dissolved 3–5x/day for 7–10 days (note: troches don't dissolve well with significant hyposalivation).", "Fluconazole 200 mg by mouth once daily for 7 days (caution in pregnancy, liver/renal disease, or arrhythmia risk).", "Denture stomatitis: miconazole cream on the denture base plus overnight denture soaks (dilute bleach for plastic, or nystatin/chlorhexidine for metal); the patient must stop sleeping in the denture.", "Angular cheilitis: topical clotrimazole or nystatin/triamcinolone cream to the corners of the mouth; improve denture fit/cleaning; consider a Vaseline barrier."]}]}, {"id": "histoplasmosis", "category": "Fungal Infections", "title": "Histoplasmosis", "aliases": ["histoplasma capsulatum", "ohio mississippi river valley fungus"], "sections": [{"h": "Overview", "items": ["A deep (lung) fungal infection from inhaling spores in dust contaminated with bird droppings (caves, chicken farms, old buildings), caused by Histoplasma capsulatum.", "Endemic to the Ohio–Mississippi river valley (80–90% of residents there have been infected at some point).", "Stays localized/encapsulated in immunocompetent people, but disseminates in immunocompromised patients — common in HIV/AIDS, Hodgkin lymphoma, and various leukemias (especially CLL/ALL/AML)."]}, {"h": "Oral disease, diagnosis, treatment", "items": ["Oral lesions: granular, erythematous, non-healing ulcers.", "Biopsy is usually needed for diagnosis, using Gomori methenamine-silver (GMS) stain.", "Treatment: amphotericin B."]}]}, {"id": "aspergillosis", "category": "Fungal Infections", "title": "Aspergillosis", "aliases": ["aspergillus fumigatus", "allergic fungal sinusitis", "aspergilloma", "fungus ball", "invasive aspergillosis"], "sections": [{"h": "Overview", "items": ["Caused by inhaling Aspergillus fumigatus, a common mold in the air that usually doesn't affect healthy people (though it can trigger allergy/asthma).", "Divided into non-invasive and invasive forms."]}, {"h": "Non-invasive forms", "items": ["Allergic fungal sinusitis: in healthy people, inhalation triggers sinus allergy; represents 5–10% of chronic rhinosinusitis cases. Presents as a radio-opacity filling the sinus, with non-specific chronic-sinusitis symptoms or no symptoms at all; treated conservatively.", "Aspergilloma (mycetoma/'fungus ball'): a mass of Aspergillus hyphae, typically treated with conservative surgical removal.", "Histology of allergic mucin shows Charcot-Leyden crystals (from eosinophil protein Galectin-10) and aggregates of eosinophils."]}, {"h": "Invasive forms", "items": ["Chronic invasive disease occurs with underlying conditions such as asthma, cystic fibrosis, sarcoidosis, TB, COPD, or COVID-19 → chronic pulmonary aspergillosis.", "Acute disseminated disease occurs in immunocompromised patients, HIV/AIDS, stem cell/organ transplant recipients, or those on cancer therapy.", "Histology: acute-angle branching, septate hyphae."]}, {"h": "Treatment", "items": ["Allergic fungal sinusitis: surgical debridement of allergic mucin plus steroids.", "Aspergilloma (fungus ball): conservative surgical debridement of the fungus ball."]}]}, {"id": "mucormycosis", "category": "Fungal Infections", "title": "Mucormycosis ('Black Fungus')", "aliases": ["rhizopus", "black fungus", "rhino-orbital-cerebral mucormycosis", "diabetic ketoacidosis fungal infection"], "sections": [{"h": "Overview", "items": ["A rare but potentially fatal deep, invasive mold infection caused by saprophytic aerobic fungi (Rhizopus, Rhizomucor, Cunninghamella) that normally live in soil, dirt, and animal manure and don't usually affect healthy people.", "Historic clusters after natural disasters (e.g., the 2005 Indian Ocean tsunami) and a marked rise in cases among COVID-19 patients (often those given corticosteroids).", "Reported hospital clusters have been linked to tongue depressors, adhesive bandages, and dirty bedsheets.", "Myths: it is NOT spread person-to-person, and is not typically transmitted via dirty water, oxygen cylinders, or masks. Decomposed produce is usually contaminated with other molds, not Mucor."]}, {"h": "Pathogenesis & risk factors", "items": ["Organisms are inhaled or ingested, invade blood vessels (angio-invasive), and cause rapidly spreading ischemic necrosis of the mouth, jaws, sinonasal tract, eyes, and brain.", "Risk factors: uncontrolled/untreated HIV/AIDS; immunosuppressive drugs/chemotherapy; leukopenia; cancer; uncontrolled diabetes with diabetic ketoacidosis; iron overload; heavy immunosuppression for COVID-19; renal failure (can't excrete blood acids).", "Diabetic ketoacidosis mechanism: ketones inhibit iron binding to transferrin, raising free serum iron, which fuels fungal growth.", "A large outbreak (>11,000 confirmed cases) occurred in India in May 2021; rare in the US."]}, {"h": "Clinical picture & treatment", "items": ["Most commonly affects mouth, nose, sinuses, eye, and brain — pain, headache, blurred vision, swollen/bulging eyes.", "Rhino-orbital-cerebral spread is the most common and constitutes a medical emergency.", "Can also affect lungs, GI tract, and skin.", "Treatment: immediate surgical debridement plus IV amphotericin B.", "Prognosis is grim without immediate treatment; CDC reports an overall mortality rate around 54%."]}]}, {"id": "other-deep-fungal", "category": "Fungal Infections", "title": "Other Deep Fungal Infections (Blastomycosis, Coccidioidomycosis, Paracoccidioidomycosis)", "aliases": ["blastomycosis", "coccidioidomycosis", "valley fever", "paracoccidioidomycosis", "south american blastomycosis", "endemic mycoses"], "sections": [{"h": "Geographic/endemic pattern", "items": ["Blastomycosis: endemic to the eastern half of the US/Canada extending to the Great Lakes; roughly a 9:1 male ratio.", "Coccidioidomycosis: endemic to the southwestern USA; also called '(San Joaquin) Valley fever' — a rare hypersensitivity reaction.", "Paracoccidioidomycosis: 'South American blastomycosis'; ~15:1 male ratio (female sex hormones appear protective)."]}, {"h": "Shared clinical pattern", "items": ["Infections progress through acute, chronic, and disseminated phases; the lungs are usually the primary site.", "Oral cavity involvement, when present, usually signals chronic or disseminated disease.", "Skin and oral lesions can mimic carcinoma and typically require biopsy for diagnosis."]}]}, {"id": "virus-basics", "category": "Viral Infections", "title": "What Is a Virus? Classification Basics", "aliases": ["obligate intracellular parasite", "icosahedral helical capsid", "dna rna virus"], "sections": [{"h": "Definition and classification", "items": ["An obligate intracellular parasite that depends on the host cell's metabolic machinery to replicate.", "Structure: nucleic acid genome surrounded by a protein coat (capsid); sometimes further encased in a lipid envelope.", "Classified by genome type (DNA or RNA), capsid shape (icosahedral or helical), and tropism (preferred cell type for replication — epithelial, endothelial, bacterial, etc)."]}]}, {"id": "herpesvirus-family-overview", "category": "Viral Infections", "title": "Herpesvirus Family Overview (HHV-1 through HHV-8)", "aliases": ["human herpesvirus table", "hhv1", "hhv2", "hhv3", "hhv4", "hhv5", "hhv6", "hhv7", "hhv8"], "sections": [{"h": "Herpesviridae — a large family of DNA viruses", "items": ["HHV-1 (HSV-1): primary herpetic gingivostomatitis; recurrent herpes infections.", "HHV-2 (HSV-2): classically below the waist, but can also affect the mouth (behaving like HSV-1 there).", "HHV-3 (Varicella-zoster virus): chickenpox on primary infection; recurrent infection presents as facial/skin/oral shingles.", "HHV-4 (EBV): hairy leukoplakia, infectious mononucleosis, Burkitt lymphoma, nasopharyngeal carcinoma, CNS lymphoma, Hodgkin lymphoma, post-transplant lymphoproliferative disorder.", "HHV-5 (CMV): oral ulcers, retinitis, gastroenteritis, hepatitis, pneumonitis.", "HHV-6 and HHV-7: roseola infantum; no oral findings.", "HHV-8: Kaposi sarcoma, Castleman disease."]}]}, {"id": "hsv", "category": "Viral Infections", "title": "Herpes Simplex Virus (HSV-1 and HSV-2)", "aliases": ["primary herpetic gingivostomatitis", "herpes labialis", "cold sores", "herpetic whitlow", "acyclovir", "valacyclovir"], "sections": [{"h": "Epidemiology", "items": ["HSV-1 typically affects the oral, facial, and ocular areas; transmitted person-to-person via infected oral secretions during close contact. About half a million new cases yearly in the US; ~90% seropositivity worldwide (50–60% in the US, and declining), higher in lower socioeconomic groups.", "HSV-2 typically affects the genital area, transmitted sexually; ~15–20% seropositivity worldwide and in the US."]}, {"h": "Sites affected by HSV-1 / HSV-2", "items": ["Mucosal: gingivostomatitis, pharyngitis, genital lesions (HSV-1 genital in 10–15% of cases).", "Eye (mainly HSV-1): keratitis, blepharitis, conjunctivitis.", "Skin: painful vesicles, erythema multiforme.", "CNS: encephalitis (HSV-1), meningitis (more typical of HSV-2), and Bell's palsy for either."]}, {"h": "Primary infection: herpetic gingivostomatitis", "items": ["Most children who get infected are asymptomatic; 15–30% develop herpetic gingivostomatitis.", "Self-limiting (10–20 days), ulcerative lesions across the gingiva and mouth, excessive drooling, sometimes fever and lymphadenopathy.", "Most symptomatic cases occur between 6 months and 5 years of age (rare in adults).", "Managed supportively (fluids, analgesics); dehydration is the most common complication. Acyclovir may shorten the course in some cases.", "Auto-inoculation can cause herpetic keratitis (a leading cause of blindness worldwide) or herpetic whitlow on the fingers (resolves in 2–3 weeks, can recur)."]}, {"h": "Recurrent infection: herpes labialis ('cold sores')", "items": ["HSV-1 becomes latent in the trigeminal ganglion after primary infection and reactivates along a branch (usually V2).", "Occurs in an estimated 20–40% of the population worldwide.", "Triggers: sunlight, fatigue, heat/cold, trauma, dental treatment, menstruation, or immunodeficiency.", "Course: a 6–24 hour viral prodrome (burning, tingling, warmth) before vesicles appear; vesicles cluster, rupture, and crust within 2 days; heals over the following days. Usually localized in healthy people, but can be diffuse in immunocompromised patients (herpetic eczema). Typically 2–10 recurrences per year.", "Recurrent intraoral (herpetic stomatitis) lesions follow palatine nerve branches, usually on attached (palate/gingiva) mucosa, with a unilateral distribution as a clinical clue."]}, {"h": "Diagnosis, histology, treatment", "items": ["Diagnosis: clinical presentation, smear preparation, biopsy rarely needed.", "Histology/cytology hallmark: multinucleated epithelial cells with ballooning degeneration and nuclear inclusions.", "Treatment: mild cases can be self-limiting or treated with OTC topical acyclovir; oral valacyclovir (2 g at prodrome, then 2 g 12 hours later); severe cases may need IV acyclovir (5 mg/kg/day for 8 days). Acyclovir works by inhibiting viral DNA synthesis.", "Short-term prophylaxis (e.g., before a beach trip, ski vacation, or dental visit): valacyclovir 1 g once daily for the duration of exposure risk."]}]}, {"id": "vzv", "category": "Viral Infections", "title": "Varicella-Zoster Virus (Chickenpox and Shingles)", "aliases": ["chickenpox", "varicella", "herpes zoster", "shingles", "ramsay hunt syndrome", "varivax", "zostavax", "post-herpetic neuralgia"], "sections": [{"h": "Overview", "items": ["Human herpesvirus-3; >95% seroprevalence in the US.", "Primary infection = varicella (chickenpox), affecting almost everyone by age 20; the virus then becomes latent in dorsal root (sensory) ganglia (rarely cranial nerve ganglia).", "Reactivation = herpes zoster (shingles), affecting about 30% of the population; increasing age is the greatest risk factor; most common on the torso, unilateral, and stops at the midline."]}, {"h": "Varicella (chickenpox)", "items": ["Self-limiting (1–2 weeks): fever, malaise, and a generalized pruritic (itchy) rash with blisters.", "Highly contagious; the younger the age of onset, the milder the disease tends to be."]}, {"h": "Herpes zoster (shingles)", "items": ["Most commonly involves thoracic or lumbar dermatomes; rash/ulceration confined to the affected dermatome, sometimes preceded by prodromal pain for days to weeks.", "Post-herpetic neuralgia is the most common complication.", "Facial/oral zoster typically follows the trigeminal nerve; oral zoster classically affects the palate (unilateral) and can cause pulpal necrosis or osteomyelitis.", "Ramsay-Hunt syndrome: zoster in the vestibular/external ear region involving the facial and auditory nerves — causes facial paralysis, hearing deficits, vertigo, and tinnitus."]}, {"h": "Vaccination", "items": ["Varivax: universal VZV vaccine introduced in 1995; >90% decrease in varicella incidence. Breakthrough infections are rare and atypical.", "Zostavax: the same VZV strain as Varivax but 14x more potent; reduces herpes zoster incidence by 50–70% and post-herpetic neuralgia by 67%."]}]}, {"id": "ebv", "category": "Viral Infections", "title": "Epstein-Barr Virus (EBV) and Hairy Leukoplakia", "aliases": ["infectious mononucleosis", "hairy leukoplakia", "ebv mucocutaneous ulcer", "koilocytosis ebv"], "sections": [{"h": "Overview", "items": ["Human herpesvirus-4; ~90–95% seropositivity worldwide, with most primary infections subclinical.", "Associated diseases: infectious mononucleosis (the classic symptomatic primary infection), B-cell and T-cell lymphomas, Hodgkin lymphoma, nasopharyngeal carcinoma, EBV mucocutaneous ulcer, and hairy leukoplakia."]}, {"h": "Hairy leukoplakia", "items": ["Highly predictive of HIV/AIDS (low CD4 counts), though it can occasionally be seen in immunocompetent people.", "Despite the name 'leukoplakia,' it carries no risk of dysplasia or malignancy.", "The virus reaches the epithelium via blood lymphocytes.", "Clinically: white, linear, plaque-like, 'shaggy' lesions, most often on the lateral tongue.", "Histology: koilocytosis in the superficial epithelium, with EBV confirmed by in-situ hybridization (ISH)."]}]}, {"id": "kaposi-sarcoma", "category": "Viral Infections", "title": "Kaposi Sarcoma (HHV-8)", "aliases": ["hhv8", "kaposi sarcoma types", "aids related kaposi sarcoma"], "sections": [{"h": "Overview & history", "items": ["An angioproliferative disorder/neoplasm caused by human herpesvirus-8.", "First described by Moritz Kaposi in 1872. The link to AIDS became clear after a 1981 report of a Pneumocystis carinii/Kaposi sarcoma cluster; HIV was identified in 1983, a diagnostic HIV serologic test came in 1985, antiretroviral drugs in 1987, and combination ART (cART) in 1996 — which produced a 60–80% decrease in AIDS-related hospitalizations/mortality and now gives HIV-infected patients a near-normal life expectancy."]}, {"h": "Four epidemiologic types", "items": ["Classic (indolent) type: cutaneous lesions in elderly males of Eastern European/Mediterranean descent.", "African-endemic type: three subtypes — indolent cutaneous (like classic type), locally aggressive cutaneous, and an aggressive childhood form with generalized lymphadenopathy that is rapidly fatal.", "Iatrogenic: a complication of immunosuppression in organ-transplant recipients.", "Epidemic/AIDS-associated: widespread mucocutaneous lesions in AIDS patients, with a strong predilection for men who have sex with men."]}, {"h": "Clinical staging & oral involvement", "items": ["The most prevalent tumor among AIDS patients; incidence has fallen ~90% since ART became available.", "Oral involvement occurs in 60–70% of HIV/AIDS-associated cases, and is the presenting sign leading to an HIV/AIDS diagnosis in about 20% of cases; oral involvement is rarer (2–5%) in non-epidemic types.", "Stages: patch (macular) → plaque → tumor (nodular); lesions are usually deep red to purple and can be hemorrhagic."]}, {"h": "Histology", "items": ["Shows cellular proliferation and hemorrhage with well-formed vascular channels; endothelial cells stain positive for CD31; HHV-8 can be confirmed by in-situ hybridization."]}]}, {"id": "coxsackievirus", "category": "Viral Infections", "title": "Coxsackievirus: Herpangina and Hand-Foot-Mouth Disease", "aliases": ["herpangina", "hand foot and mouth disease", "coxsackie virus oral"], "sections": [{"h": "Herpangina", "items": ["Caused by Coxsackie group viruses; occurs in self-limiting outbreaks.", "Clinically: vesicles and ulcers in the oropharynx (throat area) plus a low-grade fever."]}, {"h": "Hand, Foot, and Mouth Disease", "items": ["Also caused by Coxsackie group viruses; self-limiting outbreaks.", "Oral lesions mainly involve the tongue, buccal and labial mucosa, gingiva, and soft palate, in addition to the hand/foot skin lesions."]}]}, {"id": "microbiome-intro", "category": "Oral Microbial Flora", "title": "The Human and Oral Microbiome", "aliases": ["what is the microbiome", "oral microbiome diversity", "dysbiosis"], "sections": [{"h": "Key concepts", "items": ["The microbiome is the community of native bacteria (and other microbes) living in and on the body; different sites host different microbes performing different functions.", "The microbiome plays a major role in health and disease, though it remains incompletely characterized.", "There are more bacteria in your mouth than there are people in the world.", "774 prokaryotic species have been identified from the human oral cavity: roughly 58% are officially named, 16% are unnamed but cultivated, and 26% are known only as uncultivated phylotypes."]}]}, {"id": "resident-flora-acquisition", "category": "Oral Microbial Flora", "title": "Resident Oral Flora: Mutualism and Acquisition", "aliases": ["commensal mutualism", "acquisition of oral flora", "streptococci first colonizers", "firmicutes bacteroidetes actinobacteria proteobacteria"], "sections": [{"h": "Commensalism and mutualism", "items": ["Resident microflora have evolved to coexist in harmony with the host; classically defined as commensal (one organism benefits, the other is unaffected) — but in practice, the host benefits too, making it a mutualism."]}, {"h": "How the oral flora develops and changes", "items": ["Streptococci from mucosal surfaces are typically the first colonizers in babies.", "Tooth eruption changes the cultivable Gram-negative oral microbiota present.", "Major phyla and their oral genera: Firmicutes (Streptococcus, Lactobacillus, Filifactor, Staphylococcus), Bacteroidetes (Porphyromonas, Prevotella), Actinobacteria (Actinomyces), Proteobacteria (Aggregatibacter, Neisseria).", "Microbial carriage varies between individuals down to the species and even strain level."]}, {"h": "Normal oral microflora highlights", "items": ["The most common organisms are viridans streptococci: Gram-positive, facultative anaerobes.", "Mutans streptococci are the group responsible for causing caries."]}]}, {"id": "microbial-growth-factors", "category": "Oral Microbial Flora", "title": "Factors Affecting Oral Microbial Growth", "aliases": ["temperature ph redox potential", "endogenous exogenous nutrients", "fermentable carbohydrates", "xylitol", "sucrose caries"], "sections": [{"h": "Physical/chemical factors", "items": ["Temperature, redox potential, and pH all shape which organisms thrive."]}, {"h": "Endogenous nutrients", "items": ["Saliva supplies amino acids, peptides, proteins, glycoproteins, and vitamins.", "Gingival crevicular fluid (GCF) supplies albumin, proteins, glycoproteins (including heme-containing molecules)."]}, {"h": "Exogenous nutrients: fermentable carbohydrates", "items": ["Fermentable carbohydrates are broken down to acids; sucrose is converted by bacterial glucosyltransferases (GTF) and fructosyltransferases (FTF) into glucans and fructans, which help bacteria attach to teeth and store extracellular nutrients.", "This shifts the microbial balance in plaque: acid-tolerant species (mutans streptococci, lactobacilli) increase, while acid-sensitive species (S. sanguinis, S. gordonii) decrease.", "Dairy products are protective against caries (buffering capacity; milk proteins/casein reduce adherence of mutans streptococci). Xylitol inhibits S. mutans growth. Green vegetables are also protective."]}]}, {"id": "saliva-host-defenses", "category": "Oral Microbial Flora", "title": "Non-Specific and Specific Host Defenses in the Mouth", "aliases": ["saliva antimicrobial components", "lysozyme lactoferrin histatins defensins", "siga immunoglobulins oral"], "sections": [{"h": "Non-specific host defenses (mechanism table)", "items": ["Saliva flow / mucin & agglutinins: physical removal of microorganisms.", "Lysozyme-protease-anion system: cell lysis.", "Lactoferrin: sequesters iron away from microbes; apo-lactoferrin can directly kill cells.", "Sialoperoxidase system: produces hypothiocyanite (neutral pH) or hypocyanous acid (low pH), both antimicrobial.", "Histatins: antifungal, with some antibacterial activity.", "Defensins (α and β): antimicrobial and immunomodulatory.", "Cystatins, SLPI, TIMP: inhibit cysteine, serine, and metalloproteases.", "Chitinase & chromogranin: antifungal.", "Cathelicidin and calprotectin: antimicrobial."]}, {"h": "Specific (adaptive) host defenses", "items": ["Intra-epithelial lymphocytes and Langerhans cells: cellular barrier against penetrating bacteria/antigens.", "Secretory IgA (sIgA): blocks microbial adhesion and metabolism.", "IgG, IgA, IgM: block adhesion; act as opsonins; activate complement.", "Complement: activates neutrophils.", "Neutrophils/macrophages: phagocytosis."]}]}, {"id": "oral-biofilms", "category": "Oral Microbial Flora", "title": "Oral Biofilms: Formation and Benefits to Bacteria", "aliases": ["acquired pellicle", "plaque formation", "biofilm antibiotic resistance", "quorum sensing biofilm", "dental plaque"], "sections": [{"h": "Why biofilms protect bacteria", "items": ["Biofilm-dwelling bacteria are less susceptible to host defenses and antimicrobial agents — penetration of drugs is reduced, and bacteria growing on surfaces show novel resistance properties and slower growth rates."]}, {"h": "Benefits of community living in a biofilm", "items": ["Protection from antibiotics.", "Concentration of nutrients — the biofilm's negative charge helps exchange ions and hold nutrients.", "Microbial communities: nearly all bacteria live with and depend on other microorganisms for energy/carbon/nutrients; byproducts of one organism's metabolism (e.g., breakdown products of cellulose) feed others in the community.", "Genetic exchange between neighboring organisms."]}, {"h": "How oral biofilm forms", "items": ["The acquired pellicle forms first — a thin proteinaceous film on the tooth surface derived from saliva.", "Early colonizers (largely streptococci) attach to the pellicle, followed by bacterial co-aggregation and interspecies interactions that build up plaque over time."]}]}, {"id": "oral-diseases-from-flora", "category": "Oral Microbial Flora", "title": "Oral Diseases Caused by Oral Bacteria (Gingivitis, Periodontitis, Caries)", "aliases": ["gingivitis", "chronic periodontitis", "peri-implantitis", "dental caries bacteria", "socransky complexes", "streptococcus mutans", "lactobacillus caries"], "sections": [{"h": "Gingivitis", "items": ["The early, reversible stage of gum disease, most often from plaque buildup: erythema, swelling, bleeding, edema.", "The most common form is plaque-induced gingivitis; untreated, it can progress to periodontitis.", "Associated with a shift toward Gram-negative, anaerobic rods — a broad set of genera (Leptotrichia, Prevotella, Fusobacterium, Porphyromonas, Tannerella, Selenomonas, Treponema, Campylobacter, Eubacterium, and others) are enriched in gingivitis."]}, {"h": "Periodontitis", "items": ["Bacterial colonization of host tissue triggers release of pro-inflammatory cytokines → gingival inflammation → tissue necrosis/cell death (apoptosis) → tooth and bone loss.", "Highly prevalent in the US: affects more than 47% of adults overall, and about 70% of adults 65+ (with significant attachment loss in most of those cases).", "Subgingival plaque contains organized 'microbial complexes' (Socransky's color-coded complexes) that associate with disease progression."]}, {"h": "Peri-implantitis", "items": ["An inflammatory, plaque-associated condition affecting the tissues around a dental implant, analogous to periodontitis around a natural tooth."]}, {"h": "Halitosis", "items": ["Related to which bacteria dominate the tongue dorsum: S. salivarius predominates in healthy individuals and is rarely linked to halitosis, while Atopobium parvulum, Dialister species, and Eubacterium sulci are strongly associated with it."]}, {"h": "Dental caries", "items": ["Primary agents: Streptococcus mutans and S. sobrinus, which metabolize sucrose into lactic acid. (Classic evidence: germ-free mice on a high-sucrose diet stayed caries-free until mutans streptococci were introduced.)", "Species roles in caries progression: S. mutans initiates disease (acid production, EPS/biofilm formation, acid tolerance) on smooth surfaces/fissures; S. sobrinus is even more acidogenic; Lactobacillus drives lesion progression (survives below pH 4) in deep dentin; Actinomyces colonizes root surfaces/early lesions; Scardovia wiggsiae and Bifidobacterium contribute to early childhood caries progression; Veillonella consumes lactic acid and may buffer/stabilize the acidic biofilm."]}]}, {"id": "oral-bacteria-systemic-disease", "category": "Oral Microbial Flora", "title": "How Oral Bacteria Can Cause Systemic Disease", "aliases": ["periodontal disease systemic links", "infective endocarditis oral bacteria", "periodontitis cancer link"], "sections": [{"h": "Systemic associations of periodontal disease", "items": ["Current evidence links periodontal disease to diabetes, cardiovascular disease, osteoporosis, preterm/low-birth-weight babies, respiratory disease, rheumatoid arthritis, and cancer.", "In post-menopausal women, an elevated cancer association has been reported irrespective of smoking status.", "In men, periodontal disease is linked to higher risk of lung and esophageal cancer, and to elevated risk of pancreatic, kidney, and hematopoietic cancers — but not to colorectal or stomach cancer."]}, {"h": "Subacute infective endocarditis", "items": ["Oral bacteria that enter the bloodstream (e.g., after extraction/surgery) can seed heart valves (classically the mitral valve), forming vegetations.", "Key organisms: S. aureus and the viridans streptococci (especially S. sanguinis and S. gordonii).", "This is also the basis for concern about opportunistic pathogens gaining bloodstream access via oral procedures and causing abscesses or endocarditis."]}]}, {"id": "systemic-disease-oral-signs", "category": "Oral Microbial Flora", "title": "Systemic Diseases with Oral Manifestations (Overview)", "aliases": ["oral signs of systemic disease overview", "syphilis chancre tongue", "hpv oral"], "sections": [{"h": "Examples covered in this course", "items": ["Syphilis: a primary chancre can appear on the tongue.", "Oral candidiasis can be a sign of systemic immune compromise.", "HSV-1: both primary and recurrent (secondary) infection have oral presentations.", "Human papillomavirus (HPV): can cause oral lesions/warts.", "Coxsackievirus: hand-foot-mouth disease has an oral component.", "(These are each covered in more depth in their own topic — see Viral Infections and Bacterial Infections categories.)"]}]}, {"id": "health-disease-balance", "category": "Oral Microbial Flora", "title": "The Balance Between Oral Health and Disease", "aliases": ["fine balance host microbes", "opportunistic pathogens oral", "exogenous endogenous disease triggers"], "sections": [{"h": "A finely balanced relationship", "items": ["The relationship between host and oral microbes is more easily disturbed in the mouth than at most other body sites, and disturbance leads to disease.", "Opportunistic pathogens are microbes gaining access to sites normally inaccessible to them — e.g., entering the bloodstream after an extraction or surgery, which can cause abscesses or endocarditis."]}, {"h": "What disturbs the balance", "items": ["Exogenous sources: antibiotic treatment; fermentable dietary carbohydrates (fructose, lactose).", "Endogenous changes: altered host defenses from drug therapy or organ transplantation."]}, {"h": "Health-promoting vs. disease-promoting cycle", "items": ["Effective oral hygiene → thinner biofilm, maintained beneficial microbes, lower pathogen selective pressure, less acid production, fewer anaerobes → colonization resistance and cardiovascular/GI benefits.", "Poor oral hygiene and lifestyle risk factors → increased plaque, suppression of beneficial bacteria → inflammation, halitosis, gingivitis, periodontitis, caries."]}]}, {"id": "oral-infection-terms", "category": "Oral Immunology", "title": "Oral Infection Terminology: Abscess, Phlegmon, Fistula", "aliases": ["abscess definition", "phlegmon", "fistula sinus tract", "parulis", "purulence"], "sections": [{"h": "Key terms", "items": ["Abscess: a pool of neutrophils (PMNs) surrounded by macrophages and granulation tissue.", "Purulence / exudate / 'pus' — the material that collects in an abscess.", "Phlegmon: spreading purulent inflammation that tracks along fascial planes (rather than staying localized).", "Fistula (sinus tract): a path that allows pus to drain, e.g. from an area of acute osteomyelitis. A draining fistula opening on the gingiva near a tooth is called a parulis.", "Periodontitis is loss of bone support from inflammation, and can start as acute inflammation that becomes chronic."]}]}, {"id": "acute-vs-chronic-inflammation", "category": "Oral Immunology", "title": "Acute vs. Chronic Oral Inflammation", "aliases": ["acute inflammation features", "chronic inflammation features", "innate vs adaptive players"], "sections": [{"h": "Side-by-side comparison", "items": ["Acute inflammation: rapid onset of swelling, pain, redness (erythema), and heat; signs/symptoms are obvious; the main players are the innate immune system (PMNs, dilated/congested capillaries, edema).", "Chronic inflammation: represents a transition from unresolved acute inflammation; signs/symptoms are similar but less obvious; the main players are both adaptive and innate immunity (macrophages, plasma cells, lymphocytes)."]}]}, {"id": "oral-gingival-barrier", "category": "Oral Immunology", "title": "The Oral and Gingival Mucosal Barrier", "aliases": ["stratified squamous epithelium oral", "keratinized nonkeratinized mucosa", "gingival crevice junctional epithelium"], "sections": [{"h": "Epithelial anatomy", "items": ["The oral mucosa is lined by stratified squamous epithelium of varying thickness/keratinization.", "Most oral mucosa is non-keratinized 'lining' epithelium (the floor of the mouth is especially thin and vascular).", "Areas involved in mastication (hard palate, outer/attached gingiva) are keratinized.", "The tongue has specialized epithelium incorporating the taste buds."]}, {"h": "The gingival crevice", "items": ["Lined by non-keratinized sulcular epithelium that thins progressively into the junctional epithelium, which attaches to the tooth surface.", "This zone is constantly exposed to the microbial biofilm and to mechanical trauma, driving continuous immune activation — a site of ongoing surveillance and repair (active homeostasis)."]}, {"h": "The gingival immune cell network", "items": ["The gingiva houses a rich immunological network; an estimated 30,000 neutrophils transmigrate through the junctional epithelium every minute in humans.", "Resident lymphocytes are predominantly T cells, with some B cells and innate lymphoid cells (ILCs); diverse mononuclear phagocytes are also present."]}]}, {"id": "oral-immune-tolerance", "category": "Oral Immunology", "title": "Oral Immune Tolerance", "aliases": ["il-17 candida tolerance", "th17 mastication", "dendritic cell tolerance oral", "desensitized keratinocytes"], "sections": [{"h": "How the mouth tolerates its normal flora", "items": ["Host-microbial coexistence at the oral barrier depends on homeostatic mechanisms that protect commensalism.", "IL-17 signaling helps control the commensal fungus Candida albicans.", "'Damage-induced Th17' responses show that everyday mastication-induced barrier damage helps regulate local immune function.", "Patients with reduced or absent saliva have increased susceptibility to oral candidiasis.", "Some innate epithelial antimicrobial defenses depend on ongoing commensal colonization to function properly."]}, {"h": "Cellular tolerance mechanisms", "items": ["In the steady state, Langerhans cells and immature dendritic cells migrate at a low rate to draining lymph nodes, presenting commensal-derived peptides to naive T cells and inducing regulatory T cells (Tregs).", "Oral keratinocytes and macrophages become desensitized after continuous exposure to resident commensal microorganisms, so they don't mount inflammatory responses to them."]}]}, {"id": "saliva-antibodies-function", "category": "Oral Immunology", "title": "Saliva and Antibody Function in the Oral Cavity", "aliases": ["saliva composition", "iga igg igm oral function", "antibody dependent cellular cytotoxicity", "opsonization complement", "iga secretion mechanism"], "sections": [{"h": "Saliva basics", "items": ["Human saliva is 99% water; a healthy person produces about 600 mL per day, dropping to nearly zero during sleep."]}, {"h": "Antibody classes in the oral cavity", "items": ["Naive B cells first make IgM — not very antigen-specific, but it buys time; on antigen stimulation B cells switch to IgA, IgG, or IgE depending on the specific infection/response, guided by T cell help.", "IgG and IgA are the main classes protecting against odontogenic infections. IgA production is driven by IL-5, IL-6, IL-10, IL-21, and TGF-β1.", "IgG is the dominant antibody in crevicular fluid.", "IgA (dimeric/tetrameric forms) is the antibody made for secretion onto mucosal surfaces — we produce more IgA than all other antibody classes combined. In saliva, its main job is neutralization (blocking pathogen attachment).", "Antibody testing: IgM rises first, detectable in most patients about 8 days after symptom onset (marker of acute infection); IgG rises a few days after IgM and can stay elevated long after resolution, indicating lasting immunity."]}, {"h": "How IgA gets into saliva", "items": ["IgA is produced by plasma cells, then transported across epithelial cells via the poly-Ig receptor: it is bound at the basolateral membrane, carried through the cytoplasm ('transcytosed'), and released at the apical (luminal) surface into saliva. IgA polymers are made of monomers linked by J chains."]}, {"h": "Antibody effector functions", "items": ["Neutralization: directly blocks pathogens from attaching to or using host surface molecules.", "Opsonization: coats microbes to make them easier for phagocytes to engulf.", "Antibody-dependent cell-mediated cytotoxicity (ADCC): antibody-tagged targets are killed by cytotoxic cells (e.g., NK cells).", "Complement activation: triggers the complement cascade to help destroy microbes directly and recruit phagocytes.", "IgG supports opsonization, neutralization, and complement activation; IgM strongly activates complement; IgE sensitizes mast cells and supports NK-mediated killing; IgA's specialty is neutralization at mucosal surfaces."]}]}, {"id": "lymphoid-tissue-antigen-delivery", "category": "Oral Immunology", "title": "How Microbial Antigens Reach Lymphoid Tissue (Oral Immunology View)", "aliases": ["malt overview immunology", "lymph node tonsil histology basics", "waldeyers ring"], "sections": [{"h": "Two delivery routes", "items": ["Via lymphatic channels to lymph nodes.", "Directly through the surface epithelium into mucosa-associated lymphoid tissue (MALT)."]}, {"h": "MALT of the oropharynx", "items": ["The pharyngeal, palatine, and lingual tonsils make up the oral/nasopharyngeal MALT.", "Tonsils are large, non-encapsulated, irregular masses of lymphoid tissue positioned to intercept antigens entering through the mouth and nose.", "Waldeyer's ring: hypertrophy of the pharyngeal tonsil from chronic inflammation is called adenoids."]}, {"h": "Basic lymph node/tonsil histology (functional zones)", "items": ["Paracortex: mostly T cells.", "Lymphoid follicles: largely B cells; germinal centers (within follicles) mark areas that have been exposed to antigen.", "Medullary cords: mostly B cells and plasma cells."]}, {"h": "The adaptive response, in brief", "items": ["Antigen reaches peripheral lymphoid tissue → naive B and T cells become activated and undergo selection/expansion → B cells differentiate into antibody-secreting plasma cells; T cells can also become cytotoxic T cells (not typically a feature of odontogenic infections)."]}]}, {"id": "lymphatic-system-overview", "category": "Lymphoid Organs", "title": "The Lymphatic System: Components and Functions", "aliases": ["lymphatic vessels function", "lacteals fat absorption", "one way lymph flow"], "sections": [{"h": "Components", "items": ["Primary lymphoid organs, secondary lymphoid organs/tissues, and lymphatic vessels (capillaries, collecting vessels, trunks, and ducts)."]}, {"h": "Functions", "items": ["Works with the cardiovascular and immune systems to maintain homeostasis.", "Cardiovascular role: returns interstitial fluid from tissues back into the bloodstream.", "Immune role: passes that fluid through lymphoid tissues/organs where it is filtered and presented to immune cells.", "Fat absorption: specialized lymph capillaries called lacteals absorb fats and fat-soluble vitamins (blood capillaries handle most other nutrients).", "Lymph flows in only one direction — toward the heart — unlike the closed, two-way circulation of blood."]}]}, {"id": "primary-lymphoid-organs", "category": "Lymphoid Organs", "title": "Primary Lymphoid Organs: Bone Marrow and Thymus", "aliases": ["bone marrow red yellow", "thymus cortex medulla", "hassall corpuscles", "positive negative selection t cells"], "sections": [{"h": "Bone marrow", "items": ["Red bone marrow contains hematopoietic stem cells (HSCs) that become red cells, white cells, or platelets; yellow bone marrow is mostly fat, with stem cells that can become cartilage, fat, or bone cells.", "Also contains precursor cells, some mature cells (including macrophages), stromal cells, fat, and vasculature.", "B cells complete their entire development within the bone marrow. Immature T-cell precursors migrate to the thymus (hence the name 'T' cell) to finish maturing there. Once mature, both cell types enter the blood as naive lymphocytes and circulate continuously through peripheral lymphoid tissue."]}, {"h": "Thymus — general", "items": ["A bilobed, encapsulated primary lymphoid organ in the superior mediastinum.", "Main function: induction of central tolerance.", "Fully functional at birth and active in T-cell production until puberty, when it undergoes involution — decreasing lymphoid mass/cellularity and reduced T-cell output, with lymphoid tissue gradually replaced by fat."]}, {"h": "Thymic architecture", "items": ["Surrounded by a connective tissue capsule that sends septa into the parenchyma, dividing it into lobules.", "Each lobule has an outer cortex (thymic epithelial cells [TECs], immature thymocytes, macrophages) and an inner medulla (intrathymic dendritic cells, macrophages, Hassall corpuscles, mature thymocytes).", "Thymocytes sit within a network of thymic epithelial cells (the thymic stroma).", "Cortex: contains an extensive population of T lymphoblasts (thymocytes), some newly arrived via venules, mixed among APCs and TECs; the TECs form a blood-thymus barrier that shields thymocytes from unregulated antigen exposure (preventing autoimmunity).", "Medulla: fewer but larger, more mature lymphocytes; large aggregates of TECs called Hassall corpuscles secrete cytokines that regulate local dendritic cells, including factors that promote regulatory T cell development for peripheral tolerance."]}, {"h": "Positive and negative selection", "items": ["About 2–4% of thymocytes leave the thymus each day as mature T cells.", "Selection depends on the specificity/affinity of the T cell receptor for self antigen (MHC-restricted, self-tolerant).", "Positive selection: cells whose receptors interact only weakly with self antigens survive.", "Negative selection: cells with strongly self-reactive receptors are eliminated, preventing autoimmune reactions."]}]}, {"id": "antigen-presentation-basics", "category": "Lymphoid Organs", "title": "Antigen Uptake, Processing, and Presentation", "aliases": ["antigen presenting cells", "mhc class i vs class ii", "phagocytosis endocytosis macropinocytosis"], "sections": [{"h": "Three-step process", "items": ["Antigen uptake: acquiring antigen from the surrounding environment (phagocytosis for particulates, receptor-mediated endocytosis, or macropinocytosis for soluble antigens).", "Antigen processing: generating peptides inside the APC that can bind MHC molecules.", "Antigen presentation: displaying that peptide on the cell surface via MHC for T cells to recognize."]}, {"h": "Antigen-presenting cells (APCs)", "items": ["Any nucleated cell can present via the MHC class I pathway.", "Dedicated APCs for MHC class II presentation: macrophages, dendritic cells, and B cells."]}, {"h": "MHC class I vs. class II", "items": ["MHC class I (HLA-A/B/C): presents peptides (typically from endogenous/internal proteins, 8–11 amino acids) to CD8+ cytotoxic T cells; expressed on nearly all nucleated cells.", "MHC class II (HLA-DR): presents peptides (typically from exogenous proteins, 18–20 amino acids, a broader size range) to CD4+ helper T cells; expressed only on professional APCs."]}]}, {"id": "secondary-lymphoid-organs", "category": "Lymphoid Organs", "title": "Secondary Lymphoid Organs: Lymph Node, Spleen, and MALT", "aliases": ["lymph node cortex paracortex medulla", "spleen red white pulp", "malt tonsils peyers patches", "germinal center", "hev high endothelial venule"], "sections": [{"h": "What secondary lymphoid organs do", "items": ["MALT, lymph nodes, and the spleen are where most lymphocytes get fully activated by antigen presentation.", "Structurally, they're aggregations of lymphocytes within a scaffold of non-leukocyte stromal cells that provide both organization and survival signals; resident macrophages and dendritic cells are also present."]}, {"h": "Lymph node structure", "items": ["Bean-shaped, encapsulated organs distributed along lymphatic vessels; the capsule and trabeculae (extensions toward the cortex) are made of reticular fibers.", "Convex surface: afferent lymphatics enter here. Concave hilum: efferent lymphatic exits, and artery/vein/nerve enter.", "Three major regions: (1) outer cortex — receives afferent lymph, contains lymphoid follicles with germinal centers where B cells proliferate/differentiate; (2) paracortex — where most lymphocytes enter via high endothelial venules (HEVs), rich in T cells; (3) medulla — medullary cords (T and B cell-rich cordlike lymphoid tissue) and medullary sinuses (dilated spaces that may fill with neutrophils/macrophages if the node is draining an infection).", "Antigen path: carried by afferent lymphatics to the subcapsular sinus → delivered to T-cell zones where T cells recognize it on dendritic cells; B cells detect free antigen at the border of the T-cell zone and B-cell follicles. T and B cells themselves enter via HEVs in the T-cell zone, then diverge into their respective zones."]}, {"h": "Spleen", "items": ["A fist-sized organ; the only lymphoid organ that filters blood (important defense against blood-borne pathogens), and the main site where old red blood cells are destroyed. Also stores platelets and monocytes for release when needed.", "The capsule extends trabeculae into the organ interior; vessels enter/exit at a hilum.", "Two major regions: red pulp (splenic cords/sinuses; contains RBCs, platelets, and macrophages that engulf worn-out erythrocytes; ~80% of splenic volume) and white pulp (clusters of B and T lymphocytes; ~20% of splenic volume).", "Blood path: trabecular artery → central arteriole (surrounded by the periarteriolar lymphoid sheath, PALS, in white pulp, where naive T cells meet APCs and get activated) — B cells around the PALS form follicles with germinal centers, ringed by marginal zone sinuses — the arteriole then branches into capillaries feeding the splenic cords of red pulp, and blood cells re-enter circulation through the walls of the sinuses.", "The sinusoid-lining endothelial 'stave cells' are arranged like a loosely built wooden barrel; healthy blood cells squeeze between them back into circulation, while aged/abnormal red cells that can't make it through are removed by macrophages."]}, {"h": "MALT (mucosa-associated lymphoid tissue)", "items": ["Includes the pharyngeal, palatine, and lingual tonsils (plus tubal tonsils near the Eustachian tube opening) — large, non-encapsulated masses positioned to intercept antigens entering the mouth/nose.", "Palatine tonsils sit posteriorly on the soft palate; lingual tonsils at the base of the tongue; the pharyngeal tonsil in the posterior nasopharynx.", "Waldeyer's ring hypertrophy of the pharyngeal tonsil from chronic inflammation is called adenoids."]}]}, {"id": "lymphatic-vessels", "category": "Lymphoid Organs", "title": "Lymphatic Vessels", "aliases": ["lymphatic capillaries blind ended", "collecting lymphatic vessels valves", "lymphatic trunks ducts"], "sections": [{"h": "Structure and flow", "items": ["Lymphatic capillaries are blind-ended and formed by very thin endothelial cells; interstitial fluid enters by flowing between the endothelial cells.", "Fine collagen anchoring filaments extend from the basal lamina into surrounding connective tissue to prevent vessel collapse.", "Hierarchy: lymphatic capillaries (blind-ended) → collecting lymphatic vessels (contain valves to keep flow one-directional) → lymphatic trunks → lymphatic ducts, which drain back into the venous blood system.", "Lymph nodes are interconnected by this vessel network, which drains extracellular fluid from tissues, filters it through the nodes, and returns it to the blood."]}]}];
+const QUIZ_BANK = [{"category": "Overview & General Concepts", "prompt": "A microorganism that benefits from the host while the host is neither helped nor harmed is called a:", "options": ["Pathogen", "Commensal", "Opportunist", "Obligate parasite"], "correct": 1, "explanation": "Commensal describes a relationship where one organism benefits and the other is unaffected."}, {"category": "Overview & General Concepts", "prompt": "An organism that doesn't normally cause disease but does so when host defenses are compromised is called:", "options": ["A commensal", "An obligate pathogen", "An opportunistic pathogen", "A prion"], "correct": 2, "explanation": "Opportunistic infections occur when a normally harmless (often commensal) organism causes disease due to weakened host defenses."}, {"category": "Overview & General Concepts", "prompt": "Which infectious agent category is the smallest, consisting only of misfolded protein?", "options": ["Viruses", "Prions", "Bacteria", "Protozoa"], "correct": 1, "explanation": "Prions are under 20 nm and are composed of abnormal prion protein (PrP), causing diseases like Creutzfeldt-Jakob disease."}, {"category": "Overview & General Concepts", "prompt": "Mycobacterium tuberculosis is classified as a:", "options": ["Obligate extracellular bacterium", "Obligate intracellular bacterium", "Facultative intracellular bacterium", "Facultative extracellular fungus"], "correct": 2, "explanation": "M. tuberculosis is a facultative intracellular organism — it can survive inside macrophages but isn't strictly limited to intracellular life."}, {"category": "Overview & General Concepts", "prompt": "Which of the following is the most diverse body site for the normal microbiome, along with the lower intestine?", "options": ["Skin", "Oral cavity", "Urinary tract", "Blood"], "correct": 1, "explanation": "The oral cavity and lower intestine are the most microbially diverse sites in the body."}, {"category": "Overview & General Concepts", "prompt": "Particles smaller than about 5 micrometers that are inhaled tend to:", "options": ["Get trapped in mucus and are swallowed", "Go directly to the lung and are phagocytosed by macrophages/neutrophils", "Cannot enter the respiratory tract", "Are destroyed by stomach acid"], "correct": 1, "explanation": "Particles under 5 µm bypass mucus trapping and reach the alveoli, where they're taken up by resident phagocytes."}, {"category": "Overview & General Concepts", "prompt": "HIV's tropism for CD4+ T cells is explained by which mechanism?", "options": ["Temperature preference", "Resistance to stomach acid", "Binding of viral glycoprotein gp120 to CD4 and co-receptors CXCR4/CCR5", "Preference for keratinized epithelium"], "correct": 2, "explanation": "gp120 on HIV binds CD4 plus a chemokine co-receptor (CXCR4 or CCR5), giving the virus its characteristic tropism for T cells."}, {"category": "Overview & General Concepts", "prompt": "A viral infection that stops replicating for a period of time, often reactivating later, is described as:", "options": ["Acute", "Latent", "Chronic", "Disseminated"], "correct": 1, "explanation": "Latency describes a non-replicating period, classically seen with herpes simplex virus between outbreaks."}, {"category": "Overview & General Concepts", "prompt": "Which of these is NOT one of the four core factors of bacterial virulence described in this course?", "options": ["Adherence to host cells", "Invasion of tissue/cells", "Toxin production", "Photosynthesis"], "correct": 3, "explanation": "Virulence depends on adherence, invasion, toxin production, and evasion of host defenses — not photosynthesis (bacteria relevant here aren't photosynthetic)."}, {"category": "Overview & General Concepts", "prompt": "Quorum sensing in bacteria refers to:", "options": ["Bacteria sensing pH changes", "Increased virulence factor production once bacterial density is high", "A method of antibiotic resistance only", "Bacterial reproduction by spores"], "correct": 1, "explanation": "Quorum sensing lets bacteria coordinate increased virulence factor production once their local population reaches a high enough density."}, {"category": "Overview & General Concepts", "prompt": "Which diagnostic method detects antibodies against a specific organism in the blood?", "options": ["Culture", "Serology", "Molecular diagnostics (PCR)", "Proteomics"], "correct": 1, "explanation": "Serology is antibody-based detection; PCR detects nucleic acids, culture grows the organism, and proteomics uses mass spectrometry."}, {"category": "Bacterial Infections", "prompt": "Impetigo is most commonly caused by which combination of organisms?", "options": ["E. coli and Klebsiella", "Staph aureus and Strep pyogenes", "Treponema pallidum and Actinomyces", "Mycobacterium tuberculosis alone"], "correct": 1, "explanation": "Impetigo results from a mix of Staph aureus and Group A beta-hemolytic Strep pyogenes."}, {"category": "Bacterial Infections", "prompt": "Cat scratch disease is caused by:", "options": ["Bartonella henselae", "Actinomyces israelii", "Treponema pallidum", "Fusobacterium nucleatum"], "correct": 0, "explanation": "Bartonella henselae, an intracellular Gram-negative bacterium carried by cats, causes cat scratch disease."}, {"category": "Bacterial Infections", "prompt": "'Sulfur granules' seen in draining sinus tracts are a classic feature of:", "options": ["Tuberculosis", "Actinomycosis", "Syphilis", "Aspergillosis"], "correct": 1, "explanation": "Sulfur granules are bacterial colonies of Actinomyces, showing a characteristic sunburst pattern of filamentous organisms."}, {"category": "Bacterial Infections", "prompt": "Cervicofacial actinomycosis ('lumpy jaw') most often follows:", "options": ["A viral upper respiratory infection", "A break in the mucosal barrier such as a carious tooth or extraction", "Insect bite", "Sexual contact"], "correct": 1, "explanation": "Actinomycosis requires disruption of the mucosal barrier — carious teeth, extractions, root canal treatment, or jaw trauma/osteomyelitis are classic triggers."}, {"category": "Bacterial Infections", "prompt": "A painless genital or oral ulcer with indurated borders appearing 3–10 weeks after exposure describes:", "options": ["A chancre of primary syphilis", "A gumma of tertiary syphilis", "Condyloma latum of secondary syphilis", "A chancroid"], "correct": 0, "explanation": "The primary syphilis chancre is a painless, indurated ulcer appearing 3–10 weeks post-exposure."}, {"category": "Bacterial Infections", "prompt": "Condyloma latum and mucous patches are characteristic oral findings of which stage of syphilis?", "options": ["Primary", "Secondary", "Tertiary", "Congenital"], "correct": 1, "explanation": "Secondary syphilis produces mucous patches, split papules, and condyloma latum, typically 1–6 months after the primary chancre heals."}, {"category": "Bacterial Infections", "prompt": "Hutchinson's Triad (Hutchinson's teeth, interstitial keratitis, and 8th nerve deafness) is associated with:", "options": ["Primary syphilis", "Congenital syphilis", "Tertiary syphilis", "Tuberculosis"], "correct": 1, "explanation": "Hutchinson's Triad is a classic finding in congenital syphilis."}, {"category": "Bacterial Infections", "prompt": "The Ghon complex refers to:", "options": ["A vertebral TB lesion", "A primary lung TB focus plus an involved lymph node", "A cutaneous TB lesion", "A miliary TB nodule"], "correct": 1, "explanation": "The Ghon complex = the primary pulmonary TB focus combined with the associated hilar lymph node involvement."}, {"category": "Bacterial Infections", "prompt": "Vertebral tuberculosis causing disc destruction and potential kyphosis is known as:", "options": ["Scrofula", "Pott's disease", "Lupus vulgaris", "Miliary TB"], "correct": 1, "explanation": "Pott's disease is TB of the spine, which can destroy the intervertebral disc space and cause vertebral collapse/kyphosis."}, {"category": "Bacterial Infections", "prompt": "Scrofula classically results from infection with which organism, historically via contaminated milk?", "options": ["Mycobacterium bovis / M. scrofulaceum", "Treponema pallidum", "Actinomyces israelii", "Bartonella henselae"], "correct": 0, "explanation": "Scrofula (cervical TB/mycobacterial lymphadenitis) is classically linked to M. bovis (contaminated milk) or M. scrofulaceum."}, {"category": "Bacterial Infections", "prompt": "ANUG (acute necrotizing ulcerative gingivitis) is caused by which type of infection?", "options": ["A single virus", "A fusospirochetal (mixed anaerobic bacterial) complex", "A fungal infection", "A prion disease"], "correct": 1, "explanation": "ANUG results from a fusospirochetal complex including Fusobacterium nucleatum, Borrelia vincentii, Prevotella intermedia, Porphyromonas gingivalis, and Treponema species."}, {"category": "Bacterial Infections", "prompt": "Noma is best described as:", "options": ["A mild, self-limiting gingivitis", "A rapidly spreading, disfiguring gangrene of the mouth/face beginning as ANUG", "A viral vesicular disease", "A benign fibrous growth"], "correct": 1, "explanation": "Noma begins as ANUG and progresses to severe, tissue-destroying gangrene of the orofacial region, with untreated mortality around 80%."}, {"category": "Fungal Infections", "prompt": "Dimorphic fungi are best described as organisms that:", "options": ["Only grow as yeast", "Only grow as hyphae", "Grow as hyphae at room temperature and yeast at body temperature", "Cannot be cultured"], "correct": 2, "explanation": "Dimorphism refers to a temperature-dependent switch between hyphal growth (room temp) and yeast growth (body temp)."}, {"category": "Fungal Infections", "prompt": "Which fungal infection is most commonly the culprit among invasive fungal infections in transplant patients (highest incidence)?", "options": ["Aspergillosis", "Mucormycosis", "Blastomycosis", "Coccidioidomycosis"], "correct": 0, "explanation": "Aspergillosis is the most common invasive fungal infection in this group, though mortality after transplant is high (55–92%)."}, {"category": "Fungal Infections", "prompt": "Pseudomembranous candidiasis ('thrush') classically presents as:", "options": ["Fixed white plaques that cannot be removed", "Curdy white plaques that wipe off, revealing an erythematous base", "A painless indurated ulcer", "A vesicular rash"], "correct": 1, "explanation": "Thrush characteristically wipes away, unlike leukoplakia, revealing red/erythematous mucosa underneath."}, {"category": "Fungal Infections", "prompt": "Which form of oral candidiasis most closely mimics leukoplakia and usually requires biopsy to distinguish?", "options": ["Pseudomembranous candidiasis", "Chronic hyperplastic candidiasis", "Angular cheilitis", "Median rhomboid glossitis"], "correct": 1, "explanation": "Chronic hyperplastic candidiasis is the rarest form and clinically resembles leukoplakia, so biopsy is generally needed."}, {"category": "Fungal Infections", "prompt": "Denture stomatitis is a form of which type of candidiasis?", "options": ["Pseudomembranous", "Chronic hyperplastic", "Erythematous (atrophic)", "Angular cheilitis"], "correct": 2, "explanation": "Denture stomatitis is erythematous (atrophic) candidiasis occurring under a continuously worn denture."}, {"category": "Fungal Infections", "prompt": "Histoplasmosis is classically endemic to which region?", "options": ["Southwestern USA", "Ohio-Mississippi river valley", "Eastern Canada/Great Lakes", "Pacific Northwest"], "correct": 1, "explanation": "Histoplasma capsulatum is endemic to the Ohio-Mississippi river valley, associated with bird/bat droppings."}, {"category": "Fungal Infections", "prompt": "Charcot-Leyden crystals seen in allergic mucin are associated with which fungal disease?", "options": ["Mucormycosis", "Allergic fungal sinusitis (Aspergillosis)", "Histoplasmosis", "Blastomycosis"], "correct": 1, "explanation": "Charcot-Leyden crystals (from eosinophil protein Galectin-10) are found in the allergic mucin of allergic fungal sinusitis due to Aspergillus."}, {"category": "Fungal Infections", "prompt": "Mucormycosis is especially associated with which metabolic condition?", "options": ["Hyperthyroidism", "Diabetic ketoacidosis", "Hypertension", "Osteoporosis"], "correct": 1, "explanation": "Diabetic ketoacidosis raises free serum iron (by inhibiting iron-transferrin binding), which promotes Mucor growth."}, {"category": "Fungal Infections", "prompt": "The most common and most dangerous clinical pattern of mucormycosis spread is:", "options": ["Pulmonary only", "Rhino-orbital-cerebral", "Cutaneous only", "GI only"], "correct": 1, "explanation": "Rhino-orbital-cerebral spread is the most common presentation of mucormycosis and constitutes a medical emergency."}, {"category": "Fungal Infections", "prompt": "'Valley fever' is another name for which fungal infection?", "options": ["Blastomycosis", "Coccidioidomycosis", "Paracoccidioidomycosis", "Histoplasmosis"], "correct": 1, "explanation": "Coccidioidomycosis, endemic to the southwestern US, is also called (San Joaquin) Valley fever."}, {"category": "Viral Infections", "prompt": "Which herpesvirus is most associated with Kaposi sarcoma?", "options": ["HHV-4 (EBV)", "HHV-6", "HHV-8", "HHV-3 (VZV)"], "correct": 2, "explanation": "HHV-8 is the causative agent of Kaposi sarcoma and Castleman disease."}, {"category": "Viral Infections", "prompt": "Primary HSV-1 infection in children most often presents as:", "options": ["Asymptomatic infection in the majority of cases", "Always severe encephalitis", "Genital ulcers", "Chronic hepatitis"], "correct": 0, "explanation": "Most children with primary HSV-1 infection are asymptomatic; only 15–30% develop symptomatic herpetic gingivostomatitis."}, {"category": "Viral Infections", "prompt": "Recurrent herpes labialis occurs because HSV-1 becomes latent in the:", "options": ["Dorsal root ganglia", "Trigeminal ganglion", "Bone marrow", "Liver"], "correct": 1, "explanation": "HSV-1 establishes latency in the trigeminal ganglion and reactivates along a branch (usually V2) to cause cold sores."}, {"category": "Viral Infections", "prompt": "The classic histologic finding in HSV-infected epithelial cells is:", "options": ["Koilocytosis", "Multinucleation with ballooning degeneration", "Caseous necrosis", "Charcot-Leyden crystals"], "correct": 1, "explanation": "HSV (and VZV) infection causes multinucleated epithelial cells with nuclear molding and ballooning degeneration."}, {"category": "Viral Infections", "prompt": "Varicella-zoster virus becomes latent in which location after primary infection (chickenpox)?", "options": ["Trigeminal ganglion only", "Dorsal root (sensory) ganglia", "Liver", "Bone marrow"], "correct": 1, "explanation": "VZV becomes latent in dorsal root ganglia (rarely cranial nerve ganglia) after chickenpox, reactivating later as shingles."}, {"category": "Viral Infections", "prompt": "Ramsay-Hunt syndrome is caused by zoster reactivation affecting which nerves?", "options": ["Trigeminal and vagus", "Facial and auditory (vestibulocochlear) nerves", "Optic and olfactory", "Hypoglossal only"], "correct": 1, "explanation": "Ramsay-Hunt syndrome involves the facial and auditory nerves, causing facial paralysis, hearing loss, vertigo, and tinnitus."}, {"category": "Viral Infections", "prompt": "Hairy leukoplakia is most strongly associated with:", "options": ["HPV infection", "EBV infection in the setting of HIV/AIDS", "HSV reactivation", "Coxsackievirus infection"], "correct": 1, "explanation": "Hairy leukoplakia is caused by EBV and is highly predictive of HIV/AIDS with low CD4 counts, though rare cases occur in immunocompetent people."}, {"category": "Viral Infections", "prompt": "Which stage sequence correctly describes Kaposi sarcoma progression?", "options": ["Tumor → plaque → patch", "Patch → plaque → tumor", "Plaque → patch → tumor", "Tumor only, no progression"], "correct": 1, "explanation": "Kaposi sarcoma progresses from patch (macular) to plaque to tumor (nodular) stage."}, {"category": "Viral Infections", "prompt": "Herpangina and hand-foot-mouth disease are both caused by which viral group?", "options": ["Herpesviruses", "Coxsackieviruses", "Papillomaviruses", "Paramyxoviruses"], "correct": 1, "explanation": "Both herpangina and hand-foot-mouth disease are caused by Coxsackie group viruses."}, {"category": "Viral Infections", "prompt": "Which cellular marker is used to confirm endothelial differentiation in Kaposi sarcoma histology?", "options": ["CD31", "CD4", "CD8", "PAS"], "correct": 0, "explanation": "CD31 is an endothelial marker used to confirm the vascular/endothelial nature of Kaposi sarcoma proliferation."}, {"category": "Oral Microbial Flora", "prompt": "Which bacterial genus is described as the primary initiator of dental caries?", "options": ["Streptococcus mutans", "Porphyromonas gingivalis", "Actinomyces israelii", "Treponema pallidum"], "correct": 0, "explanation": "Streptococcus mutans (with S. sobrinus) is the primary initiator of caries, converting sucrose into lactic acid."}, {"category": "Oral Microbial Flora", "prompt": "Which organism predominates on the tongue dorsum in healthy individuals and is rarely linked to halitosis?", "options": ["Streptococcus salivarius", "Atopobium parvulum", "Eubacterium sulci", "Dialister species"], "correct": 0, "explanation": "S. salivarius predominates in healthy mouths and is rarely associated with halitosis, unlike the other listed organisms."}, {"category": "Oral Microbial Flora", "prompt": "The first structure to form on a clean tooth surface, setting the stage for biofilm formation, is the:", "options": ["Dental calculus", "Acquired pellicle", "Subgingival plaque", "Gingival crevicular fluid"], "correct": 1, "explanation": "The acquired pellicle, a thin salivary protein film, forms first and allows early bacterial colonizers to attach."}, {"category": "Oral Microbial Flora", "prompt": "Which of the following is a benefit bacteria gain from living in a biofilm?", "options": ["Increased susceptibility to antibiotics", "Protection from antimicrobial agents and host defenses", "Faster individual growth rates", "Loss of genetic exchange capability"], "correct": 1, "explanation": "Biofilms reduce antimicrobial penetration and protect resident bacteria from host defenses, though growth rates actually slow."}, {"category": "Oral Microbial Flora", "prompt": "Approximately what percentage of US adults are affected by periodontitis?", "options": ["About 10%", "About 25%", "More than 47%", "Nearly 100%"], "correct": 2, "explanation": "NHANES data (2009-2010) indicated periodontitis affects more than 47% of US adults."}, {"category": "Oral Microbial Flora", "prompt": "Subacute infective endocarditis from oral bacteria classically involves vegetations forming on the:", "options": ["Aortic arch wall", "Mitral valve", "Carotid artery", "Pulmonary alveoli"], "correct": 1, "explanation": "Bacteria such as viridans streptococci classically form vegetations along the mitral valve in subacute infective endocarditis."}, {"category": "Oral Microbial Flora", "prompt": "Xylitol helps prevent caries primarily by:", "options": ["Killing all oral bacteria", "Inhibiting the growth of S. mutans", "Raising salivary pH permanently", "Coating teeth in a protective film"], "correct": 1, "explanation": "Xylitol, a sugar substitute, specifically inhibits the growth of Streptococcus mutans."}, {"category": "Oral Microbial Flora", "prompt": "Dysbiosis refers to:", "options": ["Total absence of oral bacteria", "An alteration of the microbiome associated with disease", "The process of tooth eruption", "A type of antibiotic resistance"], "correct": 1, "explanation": "Dysbiosis describes a shift in the microbiome's composition that is linked to disease."}, {"category": "Oral Immunology", "prompt": "A pool of neutrophils surrounded by macrophages and granulation tissue defines a(n):", "options": ["Fistula", "Abscess", "Phlegmon", "Granuloma"], "correct": 1, "explanation": "An abscess is defined as a collection (pool) of PMNs surrounded by macrophages and granulation tissue."}, {"category": "Oral Immunology", "prompt": "Spreading purulent inflammation that tracks along fascial planes, rather than staying localized, is called a:", "options": ["Parulis", "Phlegmon", "Chancre", "Gumma"], "correct": 1, "explanation": "A phlegmon is spreading purulent inflammation along fascial planes, as opposed to a localized abscess."}, {"category": "Oral Immunology", "prompt": "The main immune players in acute inflammation are primarily from the:", "options": ["Adaptive immune system only", "Innate immune system", "Complement system exclusively", "Central nervous system"], "correct": 1, "explanation": "Acute inflammation is driven mainly by the innate immune system (neutrophils, mast cells, etc.), while chronic inflammation adds adaptive immunity."}, {"category": "Oral Immunology", "prompt": "The junctional epithelium of the gingival crevice is significant because it:", "options": ["Is heavily keratinized for protection", "Is thin, non-keratinized, and constantly exposed to biofilm and trauma, driving ongoing immune activation", "Contains no immune cells at all", "Is identical in structure to skin"], "correct": 1, "explanation": "The junctional epithelium is thin and non-keratinized, sitting at a site of constant immune surveillance and repair due to biofilm exposure and mechanical trauma."}, {"category": "Oral Immunology", "prompt": "Approximately how many neutrophils transmigrate through the junctional epithelium each minute in humans?", "options": ["300", "3,000", "30,000", "300,000"], "correct": 2, "explanation": "An estimated 30,000 neutrophils transmigrate through the junctional epithelium every minute, reflecting constant immune surveillance."}, {"category": "Oral Immunology", "prompt": "IL-17 signaling in the oral mucosa is particularly important for controlling which commensal organism?", "options": ["Streptococcus mutans", "Candida albicans", "Porphyromonas gingivalis", "Actinomyces israelii"], "correct": 1, "explanation": "IL-17 signaling helps keep the commensal fungus Candida albicans in check at the oral barrier."}, {"category": "Oral Immunology", "prompt": "Which antibody class is produced in the greatest total quantity in the body and is specialized for mucosal secretion?", "options": ["IgG", "IgM", "IgA", "IgE"], "correct": 2, "explanation": "IgA (in dimeric/tetrameric secretory form) is produced in greater total quantity than all other antibody classes combined and is specialized for mucosal surfaces like saliva."}, {"category": "Oral Immunology", "prompt": "Which antibody isotype is the first to rise during acute infection, useful for early diagnosis?", "options": ["IgA", "IgG", "IgM", "IgE"], "correct": 2, "explanation": "IgM rises first and is detectable in most patients about 8 days after symptom onset, indicating acute infection."}, {"category": "Oral Immunology", "prompt": "IgA is transported into saliva across epithelial cells via which mechanism?", "options": ["Simple diffusion", "The poly-Ig receptor (transcytosis)", "Active transport by neutrophils", "Passive leakage through tight junctions"], "correct": 1, "explanation": "IgA is bound by the poly-Ig receptor at the basolateral epithelial surface and transcytosed to the apical surface for release into saliva."}, {"category": "Oral Immunology", "prompt": "Coating a microbe with antibody to enhance phagocytosis is called:", "options": ["Neutralization", "Opsonization", "ADCC", "Complement fixation only"], "correct": 1, "explanation": "Opsonization is the process of coating a pathogen with antibody (or complement) to facilitate its uptake by phagocytes."}, {"category": "Lymphoid Organs", "prompt": "Which are the two primary lymphoid organs?", "options": ["Spleen and lymph nodes", "Thymus and bone marrow", "Tonsils and Peyer's patches", "Liver and spleen"], "correct": 1, "explanation": "The thymus and bone marrow are the primary lymphoid organs, where lymphocytes are generated/mature."}, {"category": "Lymphoid Organs", "prompt": "B lymphocytes complete their maturation in the:", "options": ["Thymus", "Bone marrow", "Spleen", "Lymph node"], "correct": 1, "explanation": "Unlike T cells, B cells complete their entire development within the bone marrow."}, {"category": "Lymphoid Organs", "prompt": "T lymphocyte precursors migrate from the bone marrow to complete maturation in the:", "options": ["Spleen", "Liver", "Thymus", "Tonsils"], "correct": 2, "explanation": "T cell precursors migrate to the thymus, where they mature — this is the source of the name 'T cell.'"}, {"category": "Lymphoid Organs", "prompt": "Hassall corpuscles are a distinguishing histologic feature of the thymic:", "options": ["Cortex", "Medulla", "Capsule", "Septa"], "correct": 1, "explanation": "Hassall corpuscles are aggregates of thymic epithelial cells found in the medulla, secreting cytokines that promote regulatory T cell development."}, {"category": "Lymphoid Organs", "prompt": "Negative selection in the thymus eliminates T cells that:", "options": ["Fail to express any receptor", "Bind self-antigen with high affinity (strongly self-reactive)", "Bind self-antigen weakly", "Have already left the thymus"], "correct": 1, "explanation": "Negative selection removes strongly self-reactive T cells to prevent autoimmune reactions; weak self-binders survive (positive selection)."}, {"category": "Lymphoid Organs", "prompt": "MHC class I molecules present peptides to which T cell type?", "options": ["CD4+ helper T cells", "CD8+ cytotoxic T cells", "Regulatory T cells only", "NK cells"], "correct": 1, "explanation": "MHC class I presents endogenous peptides to CD8+ cytotoxic T cells and is expressed on nearly all nucleated cells."}, {"category": "Lymphoid Organs", "prompt": "MHC class II molecules are expressed on which cell types?", "options": ["All nucleated cells", "Only red blood cells", "Professional antigen-presenting cells (macrophages, dendritic cells, B cells)", "Only neurons"], "correct": 2, "explanation": "MHC class II is restricted to professional APCs — macrophages, dendritic cells, and B cells — presenting to CD4+ helper T cells."}, {"category": "Lymphoid Organs", "prompt": "In a lymph node, most lymphocytes enter via high endothelial venules (HEVs) located in the:", "options": ["Outer cortex", "Paracortex", "Medullary sinuses", "Capsule"], "correct": 1, "explanation": "The paracortex, rich in T cells, is where most lymphocytes enter the lymph node via HEVs."}, {"category": "Lymphoid Organs", "prompt": "Germinal centers within lymphoid follicles indicate:", "options": ["An area with no antigen exposure", "Active B cell proliferation/differentiation after antigen exposure", "A region exclusively for T cells", "Dead lymphoid tissue"], "correct": 1, "explanation": "Germinal centers form in follicles where mature B cells proliferate and differentiate in response to antigen exposure."}, {"category": "Lymphoid Organs", "prompt": "The spleen is unique among lymphoid organs because it is the only one that:", "options": ["Produces T cells", "Filters blood directly", "Contains germinal centers", "Has an outer cortex"], "correct": 1, "explanation": "The spleen is the only lymphoid organ that filters blood directly, making it important in defense against blood-borne pathogens."}, {"category": "Lymphoid Organs", "prompt": "White pulp of the spleen is primarily composed of:", "options": ["Red blood cells being destroyed", "Clusters of B and T lymphocytes", "Adipose tissue", "Bone marrow stem cells"], "correct": 1, "explanation": "White pulp contains clustered B and T lymphocytes (around 20% of splenic volume); red pulp handles old RBC destruction."}, {"category": "Lymphoid Organs", "prompt": "The periarteriolar lymphoid sheath (PALS) in the spleen is where:", "options": ["Old red blood cells are destroyed", "Naive T cells are exposed to APCs and become activated", "Platelets are stored", "Lymph enters via afferent vessels"], "correct": 1, "explanation": "PALS surrounds the central arteriole in white pulp and is the site where naive T cells encounter APCs and become activated."}, {"category": "Lymphoid Organs", "prompt": "Waldeyer's ring hypertrophy of the pharyngeal tonsil from chronic inflammation is clinically known as:", "options": ["Adenoids", "Peyer's patches", "Parulis", "Gumma"], "correct": 0, "explanation": "Chronic hypertrophy of the pharyngeal tonsil is called adenoids."}, {"category": "Lymphoid Organs", "prompt": "Which lymphatic vessels are blind-ended and allow interstitial fluid to enter between endothelial cells?", "options": ["Lymphatic trunks", "Lymphatic ducts", "Lymphatic capillaries", "Collecting lymphatic vessels"], "correct": 2, "explanation": "Lymphatic capillaries are blind-ended, with thin endothelial cells that let interstitial fluid enter between them."}, {"category": "Lymphoid Organs", "prompt": "Which lymphatic vessels contain valves to maintain one-way flow?", "options": ["Lymphatic capillaries", "Collecting lymphatic vessels", "Lacteals only", "None — lymph flow has no valves"], "correct": 1, "explanation": "Collecting lymphatic vessels contain valves that keep lymph flowing in one direction, toward the heart."}];
+const FLASHCARDS = [{"category": "Overview & General Concepts", "term": "Commensal", "def": "An organism that benefits from the host while the host is neither helped nor harmed."}, {"category": "Overview & General Concepts", "term": "Opportunistic infection", "def": "Infection by an organism that doesn't normally cause disease, occurring when host defenses are compromised."}, {"category": "Overview & General Concepts", "term": "Obligate", "def": "Restricted to one particular mode of life (e.g., obligate intracellular parasite)."}, {"category": "Overview & General Concepts", "term": "Facultative", "def": "Capable of, but not restricted to, a particular mode of life (e.g., facultative anaerobe)."}, {"category": "Overview & General Concepts", "term": "Dysbiosis", "def": "An alteration of the microbiome that is associated with disease."}, {"category": "Overview & General Concepts", "term": "Tropism", "def": "A microorganism's preference for infecting a particular cell type or tissue."}, {"category": "Overview & General Concepts", "term": "Ghon complex", "def": "Primary pulmonary TB focus plus the associated involved hilar lymph node."}, {"category": "Overview & General Concepts", "term": "Quorum sensing", "def": "Bacterial coordination that increases virulence factor production once population density is high."}, {"category": "Bacterial Infections", "term": "Impetigo", "def": "Acute bacterial skin infection (Staph aureus + Strep pyogenes) with pustules and yellowish crusts around the mouth/nose."}, {"category": "Bacterial Infections", "term": "Bartonella henselae", "def": "Gram-negative intracellular bacterium causing cat scratch disease."}, {"category": "Bacterial Infections", "term": "Sulfur granules", "def": "Bacterial colonies of Actinomyces seen in draining sinus tracts of actinomycosis, showing a sunburst pattern."}, {"category": "Bacterial Infections", "term": "Lumpy jaw", "def": "Common name for cervicofacial actinomycosis — a painless, firm mass with sinus tract formation at the jaw angle."}, {"category": "Bacterial Infections", "term": "Chancre", "def": "Painless, indurated primary syphilis ulcer appearing 3–10 weeks after exposure."}, {"category": "Bacterial Infections", "term": "Condyloma latum", "def": "Wart-like mucosal lesion of secondary syphilis, typically on the tongue."}, {"category": "Bacterial Infections", "term": "Gumma", "def": "Destructive granulomatous lesion of tertiary syphilis; not contagious."}, {"category": "Bacterial Infections", "term": "Hutchinson's Triad", "def": "Hutchinson's teeth + interstitial keratitis + 8th cranial nerve deafness, seen in congenital syphilis."}, {"category": "Bacterial Infections", "term": "Pott's disease", "def": "Tuberculosis of the spine, causing disc destruction and potential kyphosis."}, {"category": "Bacterial Infections", "term": "Miliary TB", "def": "Widely disseminated TB with tiny 'millet seed'-sized nodules throughout the body."}, {"category": "Bacterial Infections", "term": "Scrofula", "def": "Cervical tuberculous lymphadenitis, classically from M. bovis (contaminated milk) or M. scrofulaceum."}, {"category": "Bacterial Infections", "term": "ANUG", "def": "Acute necrotizing ulcerative gingivitis ('trench mouth'); caused by a fusospirochetal bacterial complex."}, {"category": "Bacterial Infections", "term": "Noma", "def": "Rapidly spreading, disfiguring orofacial gangrene beginning as ANUG; high mortality without treatment."}, {"category": "Fungal Infections", "term": "Dimorphism", "def": "Fungal growth as hyphae at room temperature and as yeast at body temperature."}, {"category": "Fungal Infections", "term": "Thrush", "def": "Pseudomembranous candidiasis — curdy white plaques that wipe off to reveal erythematous mucosa."}, {"category": "Fungal Infections", "term": "Chronic hyperplastic candidiasis", "def": "Rarest candidiasis form; mimics leukoplakia and usually needs biopsy."}, {"category": "Fungal Infections", "term": "Median rhomboid glossitis", "def": "Localized candidiasis on the midline dorsum of the tongue."}, {"category": "Fungal Infections", "term": "Angular cheilitis (perlèche)", "def": "Candida (± Staph aureus) infection causing erythema/fissuring at the corners of the mouth."}, {"category": "Fungal Infections", "term": "Histoplasma capsulatum", "def": "Fungus causing histoplasmosis; endemic to the Ohio-Mississippi river valley (bird/bat droppings)."}, {"category": "Fungal Infections", "term": "Aspergilloma", "def": "A 'fungus ball' — mass of Aspergillus hyphae, often treated with conservative surgical removal."}, {"category": "Fungal Infections", "term": "Charcot-Leyden crystals", "def": "Crystals from eosinophil protein Galectin-10, seen in allergic fungal sinusitis."}, {"category": "Fungal Infections", "term": "Mucormycosis", "def": "Rare but often fatal invasive mold infection ('black fungus'), strongly linked to diabetic ketoacidosis."}, {"category": "Fungal Infections", "term": "Rhino-orbital-cerebral mucormycosis", "def": "The most common and most dangerous spread pattern of mucormycosis; a medical emergency."}, {"category": "Fungal Infections", "term": "Valley fever", "def": "Nickname for coccidioidomycosis, endemic to the southwestern USA."}, {"category": "Viral Infections", "term": "HHV-8", "def": "Human herpesvirus causing Kaposi sarcoma and Castleman disease."}, {"category": "Viral Infections", "term": "Herpetic gingivostomatitis", "def": "Primary HSV-1 infection in children; self-limiting ulcerative lesions across gingiva/mouth."}, {"category": "Viral Infections", "term": "Herpes labialis", "def": "Recurrent HSV-1 'cold sores' from reactivation in the trigeminal ganglion."}, {"category": "Viral Infections", "term": "Ballooning degeneration", "def": "Multinucleated epithelial cells with nuclear molding, classic for HSV/VZV infection."}, {"category": "Viral Infections", "term": "Herpes zoster", "def": "Reactivation of latent VZV from dorsal root ganglia, presenting as shingles along a dermatome."}, {"category": "Viral Infections", "term": "Ramsay-Hunt syndrome", "def": "Zoster reactivation affecting facial and auditory nerves — facial paralysis, hearing loss, vertigo, tinnitus."}, {"category": "Viral Infections", "term": "Hairy leukoplakia", "def": "White, shaggy lateral-tongue lesion caused by EBV; highly predictive of HIV/AIDS."}, {"category": "Viral Infections", "term": "Kaposi sarcoma stages", "def": "Patch (macular) → plaque → tumor (nodular)."}, {"category": "Viral Infections", "term": "Herpangina", "def": "Coxsackievirus infection causing vesicles/ulcers in the oropharynx with low-grade fever."}, {"category": "Viral Infections", "term": "Hand-foot-mouth disease", "def": "Coxsackievirus infection with oral lesions (tongue, buccal/labial mucosa) plus hand/foot skin lesions."}, {"category": "Oral Microbial Flora", "term": "Acquired pellicle", "def": "Thin salivary protein film that forms first on a clean tooth surface, enabling bacterial attachment."}, {"category": "Oral Microbial Flora", "term": "Streptococcus mutans", "def": "Primary bacterial initiator of dental caries; converts sucrose to lactic acid."}, {"category": "Oral Microbial Flora", "term": "Biofilm", "def": "A structured bacterial community offering protection from antibiotics and host defenses."}, {"category": "Oral Microbial Flora", "term": "Xylitol", "def": "Sugar substitute that inhibits growth of Streptococcus mutans, helping prevent caries."}, {"category": "Oral Microbial Flora", "term": "Viridans streptococci", "def": "Most common normal oral flora; Gram-positive facultative anaerobes; implicated in endocarditis."}, {"category": "Oral Microbial Flora", "term": "Halitosis organisms", "def": "Atopobium parvulum, Dialister sp., and Eubacterium sulci are strongly linked to bad breath."}, {"category": "Oral Microbial Flora", "term": "Peri-implantitis", "def": "Plaque-associated inflammatory condition around a dental implant, analogous to periodontitis."}, {"category": "Oral Immunology", "term": "Abscess", "def": "A pool of neutrophils surrounded by macrophages and granulation tissue."}, {"category": "Oral Immunology", "term": "Phlegmon", "def": "Spreading purulent inflammation tracking along fascial planes."}, {"category": "Oral Immunology", "term": "Parulis", "def": "A draining fistula opening on the gingiva, often from a periapical abscess."}, {"category": "Oral Immunology", "term": "Junctional epithelium", "def": "Thin, non-keratinized epithelium at the gingival crevice; site of constant immune surveillance."}, {"category": "Oral Immunology", "term": "Opsonization", "def": "Coating a microbe with antibody/complement to enhance phagocytosis."}, {"category": "Oral Immunology", "term": "ADCC", "def": "Antibody-dependent cell-mediated cytotoxicity — antibody-tagged targets killed by cytotoxic cells like NK cells."}, {"category": "Oral Immunology", "term": "Secretory IgA", "def": "Dominant antibody in saliva; blocks microbial adhesion at mucosal surfaces (neutralization)."}, {"category": "Oral Immunology", "term": "Poly-Ig receptor", "def": "Epithelial receptor that transcytoses IgA from the lamina propria into saliva."}, {"category": "Lymphoid Organs", "term": "Primary lymphoid organs", "def": "Thymus and bone marrow — where lymphocytes are generated and mature."}, {"category": "Lymphoid Organs", "term": "Secondary lymphoid organs", "def": "Lymph nodes, spleen, and MALT — where mature lymphocytes are activated by antigen."}, {"category": "Lymphoid Organs", "term": "Hassall corpuscles", "def": "Aggregates of thymic epithelial cells in the medulla; secrete cytokines promoting regulatory T cells."}, {"category": "Lymphoid Organs", "term": "Positive selection", "def": "Survival of thymocytes whose receptors bind self-antigen weakly."}, {"category": "Lymphoid Organs", "term": "Negative selection", "def": "Elimination of thymocytes with strongly self-reactive receptors, preventing autoimmunity."}, {"category": "Lymphoid Organs", "term": "MHC class I", "def": "Presents endogenous peptides to CD8+ cytotoxic T cells; on nearly all nucleated cells."}, {"category": "Lymphoid Organs", "term": "MHC class II", "def": "Presents exogenous peptides to CD4+ helper T cells; only on professional APCs."}, {"category": "Lymphoid Organs", "term": "Germinal center", "def": "Site within a lymphoid follicle where activated B cells proliferate/differentiate."}, {"category": "Lymphoid Organs", "term": "Red pulp", "def": "Splenic region where old/damaged red blood cells are destroyed by macrophages."}, {"category": "Lymphoid Organs", "term": "White pulp", "def": "Splenic region containing clustered B and T lymphocytes (~20% of spleen volume)."}, {"category": "Lymphoid Organs", "term": "PALS", "def": "Periarteriolar lymphoid sheath — site in splenic white pulp where naive T cells meet APCs."}, {"category": "Lymphoid Organs", "term": "Waldeyer's ring", "def": "Ring of MALT tonsillar tissue (pharyngeal, palatine, lingual, tubal tonsils) around the oropharynx."}, {"category": "Lymphoid Organs", "term": "Lacteals", "def": "Specialized lymph capillaries that absorb dietary fats and fat-soluble vitamins."}];
+</script>
+<script>
+/* ============================================================
+   The Differential — study companion app logic
+   ============================================================ */
+
+const CATEGORY_ORDER = [
+  "Overview & General Concepts",
+  "Bacterial Infections",
+  "Fungal Infections",
+  "Viral Infections",
+  "Oral Microbial Flora",
+  "Oral Immunology",
+  "Lymphoid Organs"
+];
+
+const CATEGORY_COLOR = {
+  "Overview & General Concepts": "#4E5A66",
+  "Bacterial Infections": "#B07C22",
+  "Fungal Infections": "#527056",
+  "Viral Infections": "#33607D",
+  "Oral Microbial Flora": "#AE4568",
+  "Oral Immunology": "#4A3B6B",
+  "Lymphoid Organs": "#443A72"
+};
+
+const EXAMPLE_QUESTIONS = [
+  "What causes ANUG?",
+  "What's the difference between thrush and hyperplastic candidiasis?",
+  "What are the stages of Kaposi sarcoma?",
+  "How does IgA get into saliva?",
+  "What is cervicofacial actinomycosis?",
+  "Explain positive and negative selection in the thymus",
+  "What organisms cause dental caries?",
+  "What is Ramsay-Hunt syndrome?"
+];
+
+const STOPWORDS = new Set(["what","whats","is","are","was","were","the","a","an","of","does","do","did",
+  "how","why","in","on","to","and","or","for","with","my","i","tell","me","about","explain","describe",
+  "can","you","please","this","that","it","its","which","who","when","where","causes","cause","caused",
+  "define","definition","meaning","mean","between","difference","vs","versus","also","be","been"]);
+
+/* ---------------- safe storage ---------------- */
+const safeStorage = (function(){
+  try{
+    const k="__t__"; localStorage.setItem(k,"1"); localStorage.removeItem(k);
+    return {
+      get(key){ try{ const v=localStorage.getItem(key); return v?JSON.parse(v):null; }catch(e){ return null; } },
+      set(key,val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
+    };
+  }catch(e){
+    const mem={};
+    return { get(key){ return mem[key]===undefined?null:mem[key]; }, set(key,val){ mem[key]=val; } };
+  }
+})();
+
+/* ---------------- helpers ---------------- */
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function tokenize(str){
+  return str.toLowerCase()
+    .replace(/[^a-z0-9\s\-]/g," ")
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter(t => !STOPWORDS.has(t) && t.length > 1);
+}
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function catColor(cat){ return CATEGORY_COLOR[cat] || "#4A3B6B"; }
+
+/* ================================================================
+   SEARCH ENGINE
+   ================================================================ */
+function scoreTopic(topic, queryTokens, queryRaw){
+  let score = 0;
+  const titleLower = topic.title.toLowerCase();
+  const aliasesLower = topic.aliases.map(a=>a.toLowerCase());
+  const catLower = topic.category.toLowerCase();
+
+  if(queryRaw.length > 3){
+    if(titleLower.includes(queryRaw)) score += 45;
+    aliasesLower.forEach(a=>{
+      if(a.length>3 && (a.includes(queryRaw) || queryRaw.includes(a))) score += 32;
+    });
+  }
+
+  queryTokens.forEach(tok=>{
+    if(titleLower.includes(tok)) score += 11;
+    aliasesLower.forEach(a=>{ if(a.includes(tok)) score += 9; });
+    if(catLower.includes(tok)) score += 3;
+    topic.sections.forEach(sec=>{
+      if(sec.h.toLowerCase().includes(tok)) score += 4;
+      sec.items.forEach(it=>{
+        const lower = it.toLowerCase();
+        let idx=0, c=0;
+        while((idx = lower.indexOf(tok, idx)) !== -1){ c++; idx += tok.length; }
+        score += c * 1.3;
+      });
+    });
+  });
+  return score;
+}
+
+function runSearch(query){
+  const queryRaw = query.trim().toLowerCase();
+  const tokens = tokenize(query);
+  if(tokens.length === 0 && queryRaw.length < 2) return [];
+  const scored = TOPICS.map(t => ({ topic:t, score: scoreTopic(t, tokens, queryRaw) }))
+    .filter(x => x.score > 0)
+    .sort((a,b) => b.score - a.score);
+  return scored;
+}
+
+/* ================================================================
+   TOPIC CARD RENDERING
+   ================================================================ */
+function renderTopicCardHTML(topic){
+  const color = catColor(topic.category);
+  const sections = topic.sections.map(sec => `
+    <div class="section">
+      <h3>${esc(sec.h)}</h3>
+      <ul>${sec.items.map(it => `<li>${esc(it)}</li>`).join("")}</ul>
+    </div>
+  `).join("");
+  return `
+    <article class="topic-card" style="--cat-color:${color}">
+      <div class="eyebrow"><span class="swatch" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color}"></span>${esc(topic.category)}</div>
+      <h2>${esc(topic.title)}</h2>
+      ${sections}
+    </article>
+  `;
+}
+
+function relatedButtonsHTML(list, label){
+  if(!list.length) return "";
+  return `
+    <div class="related-row">
+      <div class="label">${esc(label)}</div>
+      <div class="related-list">
+        ${list.map(t => `<button data-topic-id="${esc(t.id)}" class="related-btn"><span class="rc">${esc(t.category)}</span>${esc(t.title)}</button>`).join("")}
+      </div>
+    </div>
+  `;
+}
+
+/* ================================================================
+   ASK VIEW
+   ================================================================ */
+const askInput = document.getElementById("ask-input");
+const askForm = document.getElementById("ask-form");
+const askResults = document.getElementById("ask-results");
+const askChips = document.getElementById("ask-chips");
+
+function renderChips(){
+  askChips.innerHTML = EXAMPLE_QUESTIONS.map(q => `<button type="button" class="chip">${esc(q)}</button>`).join("");
+}
+renderChips();
+
+function showAskEmpty(){
+  askResults.innerHTML = "";
+}
+
+function showAskNoMatch(query){
+  askResults.innerHTML = `
+    <div class="hint-empty">
+      No direct match for &ldquo;${esc(query)}&rdquo; yet. Try different wording, or browse the categories below.
+      <div class="chips" style="justify-content:center;margin-top:14px;">
+        ${CATEGORY_ORDER.map(c => `<button type="button" class="chip" data-goto-cat="${esc(c)}">${esc(c)}</button>`).join("")}
+      </div>
+    </div>`;
+  askResults.querySelectorAll("[data-goto-cat]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{ switchView("browse"); openCategoryOnly(btn.dataset.gotoCat); });
+  });
+}
+
+function renderAskResult(topResult, others){
+  const relatedHTML = relatedButtonsHTML(others.slice(0,5).map(x=>x.topic || x), "Other relevant topics");
+  askResults.innerHTML = renderTopicCardHTML(topResult) + relatedHTML;
+  wireRelatedButtons(askResults);
+}
+
+function wireRelatedButtons(container){
+  container.querySelectorAll(".related-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.topicId;
+      const topic = TOPICS.find(t=>t.id===id);
+      if(!topic) return;
+      const scored = runSearch(topic.title);
+      const others = scored.filter(x=>x.topic.id!==topic.id);
+      renderAskResult(topic, others);
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  });
+}
+
+function doSearch(query){
+  if(!query || query.trim().length===0){ showAskEmpty(); return; }
+  const scored = runSearch(query);
+  if(scored.length === 0){ showAskNoMatch(query); return; }
+  renderAskResult(scored[0].topic, scored.slice(1));
+}
+
+askForm.addEventListener("submit", (e)=>{
+  e.preventDefault();
+  doSearch(askInput.value);
+});
+let askDebounce;
+askInput.addEventListener("input", ()=>{
+  clearTimeout(askDebounce);
+  askDebounce = setTimeout(()=>{ doSearch(askInput.value); }, 260);
+});
+askChips.addEventListener("click", (e)=>{
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  askInput.value = chip.textContent;
+  doSearch(chip.textContent);
+});
+
+/* ================================================================
+   BROWSE VIEW
+   ================================================================ */
+const catListEl = document.getElementById("cat-list");
+const browseDetail = document.getElementById("browse-detail");
+
+function buildCatList(){
+  catListEl.innerHTML = CATEGORY_ORDER.map(cat => {
+    const topicsInCat = TOPICS.filter(t=>t.category===cat);
+    const color = catColor(cat);
+    return `
+      <div class="cat-group" data-cat="${esc(cat)}" style="--cat-color:${color}">
+        <div class="cat-head">
+          <span class="swatch"></span>
+          <span>${esc(cat)}</span>
+          <span class="count">${topicsInCat.length}</span>
+        </div>
+        <div class="topic-list">
+          ${topicsInCat.map(t => `<button type="button" data-id="${esc(t.id)}">${esc(t.title)}</button>`).join("")}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  catListEl.querySelectorAll(".cat-head").forEach(head=>{
+    head.addEventListener("click", ()=>{
+      head.parentElement.classList.toggle("open");
+    });
+  });
+  catListEl.querySelectorAll(".topic-list button").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      showTopicInBrowse(id);
+      catListEl.querySelectorAll(".topic-list button").forEach(b=>b.classList.remove("sel"));
+      btn.classList.add("sel");
+    });
+  });
+}
+
+function showTopicInBrowse(id){
+  const topic = TOPICS.find(t=>t.id===id);
+  if(!topic) return;
+  const others = TOPICS.filter(t=>t.category===topic.category && t.id!==topic.id).slice(0,5);
+  browseDetail.innerHTML = renderTopicCardHTML(topic) + relatedButtonsHTML(others, "More in " + topic.category);
+  wireRelatedButtonsBrowse(browseDetail);
+}
+function wireRelatedButtonsBrowse(container){
+  container.querySelectorAll(".related-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      showTopicInBrowse(btn.dataset.topicId);
+      catListEl.querySelectorAll(".topic-list button").forEach(b=>{
+        b.classList.toggle("sel", b.dataset.id===btn.dataset.topicId);
+      });
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  });
+}
+function openCategoryOnly(cat){
+  catListEl.querySelectorAll(".cat-group").forEach(g=>{
+    g.classList.toggle("open", g.dataset.cat===cat);
+  });
+  const group = catListEl.querySelector(`.cat-group[data-cat="${CSS.escape(cat)}"]`);
+  if(group) group.scrollIntoView({behavior:"smooth", block:"start"});
+}
+buildCatList();
+
+/* ================================================================
+   FLASHCARDS VIEW
+   ================================================================ */
+const fcCategorySel = document.getElementById("fc-category");
+const fcOrderSel = document.getElementById("fc-order");
+const fcStage = document.getElementById("fc-stage");
+const fcProgress = document.getElementById("fc-progress");
+
+let fcDeck = [];
+let fcIndex = 0;
+let fcFlipped = false;
+let fcKnown = new Set(safeStorage.get("fc_known_v1") || []);
+
+function fcKey(card){ return card.category + "::" + card.term; }
+
+function populateFcCategorySelect(){
+  fcCategorySel.innerHTML = `<option value="all">All categories</option>` +
+    CATEGORY_ORDER.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
+}
+populateFcCategorySelect();
+
+function buildFcDeck(){
+  const cat = fcCategorySel.value;
+  let deck = cat === "all" ? FLASHCARDS.slice() : FLASHCARDS.filter(c=>c.category===cat);
+  if(fcOrderSel.value === "shuffle") deck = shuffleArr(deck);
+  fcDeck = deck;
+  fcIndex = 0;
+  fcFlipped = false;
+  renderFcStage();
+}
+
+function renderFcStage(){
+  if(fcDeck.length === 0){
+    fcStage.innerHTML = `<div class="browse-placeholder">No flashcards in this set.</div>`;
+    fcProgress.textContent = "";
+    return;
+  }
+  const card = fcDeck[fcIndex];
+  const color = catColor(card.category);
+  const known = fcKnown.has(fcKey(card));
+  fcStage.innerHTML = `
+    <div class="fc-card" style="--cat-color:${color}" id="fc-card-el">
+      <span class="fc-cat">${esc(card.category)}${known ? " · known" : ""}</span>
+      ${fcFlipped
+        ? `<div class="fc-def">${esc(card.def)}</div>`
+        : `<div class="fc-term">${esc(card.term)}</div>`}
+      <span class="fc-flip-note">tap card to flip</span>
+    </div>
+    <div class="fc-buttons">
+      <button type="button" id="fc-dontknow" class="dontknow">Don't know</button>
+      <button type="button" id="fc-prev">&larr; Prev</button>
+      <button type="button" id="fc-next" class="primary">Next &rarr;</button>
+      <button type="button" id="fc-know" class="know">Know it</button>
+    </div>
+  `;
+  fcProgress.textContent = `${fcIndex+1} / ${fcDeck.length}  ·  ${fcKnown.size} known total`;
+
+  document.getElementById("fc-card-el").addEventListener("click", ()=>{
+    fcFlipped = !fcFlipped;
+    renderFcStage();
+  });
+  document.getElementById("fc-prev").addEventListener("click", (e)=>{
+    e.stopPropagation();
+    fcIndex = (fcIndex - 1 + fcDeck.length) % fcDeck.length;
+    fcFlipped = false;
+    renderFcStage();
+  });
+  document.getElementById("fc-next").addEventListener("click", (e)=>{
+    e.stopPropagation();
+    fcIndex = (fcIndex + 1) % fcDeck.length;
+    fcFlipped = false;
+    renderFcStage();
+  });
+  document.getElementById("fc-know").addEventListener("click", (e)=>{
+    e.stopPropagation();
+    fcKnown.add(fcKey(card));
+    safeStorage.set("fc_known_v1", Array.from(fcKnown));
+    fcIndex = (fcIndex + 1) % fcDeck.length;
+    fcFlipped = false;
+    renderFcStage();
+  });
+  document.getElementById("fc-dontknow").addEventListener("click", (e)=>{
+    e.stopPropagation();
+    fcKnown.delete(fcKey(card));
+    safeStorage.set("fc_known_v1", Array.from(fcKnown));
+    fcIndex = (fcIndex + 1) % fcDeck.length;
+    fcFlipped = false;
+    renderFcStage();
+  });
+}
+
+fcCategorySel.addEventListener("change", buildFcDeck);
+fcOrderSel.addEventListener("change", buildFcDeck);
+
+/* ================================================================
+   QUIZ VIEW
+   ================================================================ */
+const quizArea = document.getElementById("quiz-area");
+let quizState = null;
+
+function renderQuizSetup(){
+  const counts = [10, 20, 40];
+  quizArea.innerHTML = `
+    <div class="quiz-setup">
+      <h2>Test yourself</h2>
+      <div class="field">
+        <label>Category</label>
+        <select id="quiz-cat">
+          <option value="all">All categories</option>
+          ${CATEGORY_ORDER.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field">
+        <label>Number of questions</label>
+        <select id="quiz-count"></select>
+      </div>
+      <button type="button" class="fc-buttons primary" id="quiz-start" style="border:none;background:var(--ink);color:var(--paper);padding:11px 24px;border-radius:999px;font-weight:600;cursor:pointer;">Start quiz</button>
+      <div id="quiz-best" style="margin-top:14px;font-size:12.5px;color:var(--ink-soft);"></div>
+    </div>
+  `;
+  const catSel = document.getElementById("quiz-cat");
+  const countSel = document.getElementById("quiz-count");
+
+  function refreshCounts(){
+    const cat = catSel.value;
+    const pool = cat === "all" ? QUIZ_BANK : QUIZ_BANK.filter(q=>q.category===cat);
+    const opts = counts.filter(c=>c < pool.length);
+    opts.push(pool.length);
+    const uniqueOpts = Array.from(new Set(opts)).sort((a,b)=>a-b);
+    countSel.innerHTML = uniqueOpts.map(n=>`<option value="${n}">${n===pool.length ? "All ("+n+")" : n}</option>`).join("");
+    const best = safeStorage.get("quiz_best_" + cat);
+    document.getElementById("quiz-best").textContent = best ? `Best score for this category: ${best.score}/${best.total} (${Math.round(100*best.score/best.total)}%)` : "";
+  }
+  catSel.addEventListener("change", refreshCounts);
+  refreshCounts();
+
+  document.getElementById("quiz-start").addEventListener("click", ()=>{
+    const cat = catSel.value;
+    const count = parseInt(countSel.value, 10);
+    startQuiz(cat, count);
+  });
+}
+
+function startQuiz(cat, count){
+  const pool = cat === "all" ? QUIZ_BANK : QUIZ_BANK.filter(q=>q.category===cat);
+  const chosen = shuffleArr(pool).slice(0, count).map(q=>{
+    const optionOrder = shuffleArr(q.options.map((opt,i)=>({opt, isCorrect: i===q.correct})));
+    return {
+      category: q.category,
+      prompt: q.prompt,
+      explanation: q.explanation,
+      options: optionOrder
+    };
+  });
+  quizState = { cat, questions: chosen, index:0, score:0, answered:false };
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const { questions, index, score } = quizState;
+  const q = questions[index];
+  const color = catColor(q.category);
+  quizArea.innerHTML = `
+    <div class="quiz-q" style="--cat-color:${color};border-top:5px solid ${color}">
+      <div class="quiz-meta">
+        <span>${esc(q.category)}</span>
+        <span>Question ${index+1} / ${questions.length} &middot; Score ${score}</span>
+      </div>
+      <h2>${esc(q.prompt)}</h2>
+      <div class="quiz-options">
+        ${q.options.map((o,i)=>`<button type="button" data-i="${i}">${esc(o.opt)}</button>`).join("")}
+      </div>
+      <div class="quiz-explain" id="quiz-explain">${esc(q.explanation)}</div>
+      <div class="quiz-nextbar"><button type="button" id="quiz-next" style="display:none;">${index === questions.length-1 ? "See results" : "Next question"}</button></div>
+    </div>
+  `;
+  quizState.answered = false;
+  const optionButtons = quizArea.querySelectorAll(".quiz-options button");
+  optionButtons.forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(quizState.answered) return;
+      quizState.answered = true;
+      const i = parseInt(btn.dataset.i,10);
+      const picked = q.options[i];
+      optionButtons.forEach((b,bi)=>{
+        b.disabled = true;
+        if(q.options[bi].isCorrect) b.classList.add("correct");
+        else if(bi===i) b.classList.add("incorrect");
+      });
+      if(picked.isCorrect) quizState.score++;
+      document.getElementById("quiz-explain").classList.add("show");
+      document.getElementById("quiz-next").style.display = "inline-block";
+      // update meta score live
+      quizArea.querySelector(".quiz-meta span:last-child").textContent =
+        `Question ${index+1} / ${questions.length} · Score ${quizState.score}`;
+    });
+  });
+  document.getElementById("quiz-next").addEventListener("click", ()=>{
+    if(quizState.index < quizState.questions.length - 1){
+      quizState.index++;
+      renderQuizQuestion();
+    }else{
+      renderQuizResults();
+    }
+  });
+}
+
+function renderQuizResults(){
+  const { score, questions, cat } = quizState;
+  const total = questions.length;
+  const pct = Math.round(100*score/total);
+  const prevBest = safeStorage.get("quiz_best_" + cat);
+  if(!prevBest || score > prevBest.score || (score===prevBest.score && total>prevBest.total)){
+    safeStorage.set("quiz_best_" + cat, {score, total});
+  }
+  quizArea.innerHTML = `
+    <div class="quiz-setup quiz-result">
+      <h2>Quiz complete</h2>
+      <div class="score">${score}/${total}</div>
+      <p>${pct}% correct${pct>=85?" — excellent work.":pct>=60?" — solid, review the misses below.":" — worth another pass through this material."}</p>
+      <div class="fc-buttons" style="justify-content:center;">
+        <button type="button" id="quiz-retry" class="primary">Try again</button>
+        <button type="button" id="quiz-newsetup">Change settings</button>
+      </div>
+    </div>
+  `;
+  document.getElementById("quiz-retry").addEventListener("click", ()=> startQuiz(quizState.cat, questions.length));
+  document.getElementById("quiz-newsetup").addEventListener("click", renderQuizSetup);
+}
+
+/* ================================================================
+   TAB / VIEW SWITCHING
+   ================================================================ */
+const tabButtons = document.querySelectorAll("#tabs button");
+function switchView(view){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.getElementById("view-" + view).classList.add("active");
+  tabButtons.forEach(b=>b.classList.toggle("active", b.dataset.view===view));
+  if(view === "flashcards" && fcDeck.length===0) buildFcDeck();
+  if(view === "quiz" && !quizState) renderQuizSetup();
+}
+tabButtons.forEach(btn=>{
+  btn.addEventListener("click", ()=> switchView(btn.dataset.view));
+});
+
+/* init */
+switchView("ask");
+
+</script>
+</body>
+</html>
